@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRF 광학계 + 시간 게이팅</title>
+<style>
+:root{
+  --bg:#faf9f5; --surface:#ffffff; --text:#1f1e1c; --muted:#5f5e5a;
+  --border:rgba(0,0,0,0.12); --uv:#7C5CE0; --eu:#E24B4A; --gate:#1D9E75;
+  --struct:#888780; --su:#E60044;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1c1b19; --surface:#2a2926; --text:#ECEAE3; --muted:#a8a69e;
+    --border:rgba(255,255,255,0.14); --uv:#A99CF0; --eu:#F0807F; --gate:#5DCAA5;
+    --struct:#a8a69e; --su:#FF5C7A;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,"Apple SD Gothic Neo",Pretendard,system-ui,sans-serif;
+  line-height:1.6;padding:24px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+.card{background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 18px 14px;margin-bottom:16px}
+.card h2{font-size:15px;font-weight:600;margin:0 0 2px}
+.card p.cap{color:var(--muted);font-size:13px;margin:0 0 10px}
+svg{width:100%;height:auto;display:block}
+.beam{transition:opacity .12s linear}
+@media (prefers-reduced-motion: no-preference){
+  .flow{stroke-dasharray:7 7;animation:flow .65s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-28}}
+  #emBeam.flow{animation-name:flowUp}
+  @keyframes flowUp{to{stroke-dashoffset:28}}
+}
+.controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;
+  margin-top:10px;font-size:13px;color:var(--muted)}
+.controls label{display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px}
+.controls .row{display:flex;justify-content:space-between}
+.controls b{color:var(--text);font-weight:600}
+input[type=range]{accent-color:var(--gate);width:100%}
+button{background:var(--su);color:#fff;border:none;border-radius:10px;
+  padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+button:active{transform:translateY(1px)}
+.readout{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:130px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font-size:19px;font-weight:600;margin-top:2px}
+.note{font-size:13px;color:var(--muted);background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:4px}
+.note b{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TRF 광학계는 어떻게 배경을 지우나</h1>
+<p class="sub">시간분해 형광(Time-Resolved Fluorescence) · 직각 광학 배치 + 시간 게이팅</p>
+
+<div class="card">
+<h2>1. 광학 경로 — 빛이 어디로 흐르나</h2>
+<p class="cap">UV 펄스가 시료를 때리면(보라), 시료가 형광을 방출하고(빨강) 직각 방향 검출기로 들어간다. 아래 그래프와 동기되어 자동 반복된다.</p>
+<svg viewBox="0 0 680 250" role="img" aria-label="TRF 직각 광학 배치">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <line id="emBeam" class="beam flow" x1="335" y1="142" x2="335" y2="92" stroke="var(--eu)" stroke-width="4" stroke-linecap="round" opacity="0.15" marker-end="url(#ar)"/>
+  <line id="exBeam" class="beam flow" x1="162" y1="180" x2="286" y2="180" stroke="var(--uv)" stroke-width="4" stroke-linecap="round" opacity="0.15" marker-end="url(#ar)"/>
+
+  <rect x="275" y="36" width="120" height="50" rx="8" fill="var(--surface)" stroke="var(--struct)" stroke-width="1"/>
+  <text x="335" y="61" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">광검출기 (PD)</text>
+  <text x="335" y="77" text-anchor="middle" font-size="11" fill="var(--muted)">대면적 photodiode</text>
+
+  <rect x="306" y="96" width="58" height="14" rx="3" fill="var(--surface)" stroke="var(--struct)" stroke-width="1"/>
+  <text x="372" y="100" font-size="12" font-weight="600" fill="var(--text)">방출 필터</text>
+  <text x="372" y="115" font-size="11" fill="var(--muted)">~615 nm BPF</text>
+
+  <rect id="sample" x="290" y="146" width="90" height="64" rx="8" fill="var(--surface)" stroke="var(--eu)" stroke-width="1.4"/>
+  <text x="335" y="172" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">시료</text>
+  <text x="335" y="190" text-anchor="middle" font-size="11" fill="var(--muted)">Eu 표지 복합체</text>
+
+  <rect x="200" y="156" width="16" height="48" rx="3" fill="var(--surface)" stroke="var(--struct)" stroke-width="1"/>
+  <text x="208" y="222" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">여기 필터</text>
+  <text x="208" y="237" text-anchor="middle" font-size="11" fill="var(--muted)">~365 nm BPF</text>
+
+  <rect x="40" y="152" width="124" height="56" rx="8" fill="var(--surface)" stroke="var(--uv)" stroke-width="1.4"/>
+  <text x="102" y="176" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">펄스 UV-LED</text>
+  <text x="102" y="194" text-anchor="middle" font-size="11" fill="var(--muted)">365 nm</text>
+</svg>
+</div>
+
+<div class="card">
+<h2>2. 시간 게이팅 — 왜 늦게 측정하나</h2>
+<p class="cap">펄스가 꺼지면 배경(산란·자가형광)은 µs 안에 사라지지만, Eu는 수백 µs 동안 빛난다. 게이트(초록)를 움직여 배경이 죽은 뒤에 측정하는 효과를 직접 봐.</p>
+<svg viewBox="0 0 680 250" role="img" aria-label="TRF 시간 게이팅 그래프">
+  <rect id="delayBox" x="97" y="40" width="0" height="170" fill="var(--struct)" opacity="0.10"/>
+  <rect id="gateBox" x="0" y="40" width="0" height="170" fill="var(--gate)" opacity="0.16"/>
+  <line x1="70" y1="40" x2="70" y2="210" stroke="var(--struct)" stroke-width="0.5" opacity="0.6"/>
+  <line x1="70" y1="210" x2="624" y2="210" stroke="var(--struct)" stroke-width="0.5" opacity="0.6"/>
+  <path id="pulse" d="" fill="var(--uv)" opacity="0.18" stroke="var(--uv)" stroke-width="1.4"/>
+  <polyline id="bgCurve" fill="none" stroke="var(--struct)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polyline id="euCurve" fill="none" stroke="var(--eu)" stroke-width="2"/>
+  <line id="cursor" x1="70" y1="34" x2="70" y2="214" stroke="var(--su)" stroke-width="1.5" opacity="0"/>
+  <circle id="euMarker" r="4.5" fill="var(--eu)" opacity="0"/>
+  <text id="lblPulse" x="84" y="32" text-anchor="middle" font-size="11" fill="var(--uv)" font-weight="600">LED 펄스</text>
+  <text x="160" y="58" font-size="11" fill="var(--struct)" font-weight="600">배경 — µs 안에 소멸</text>
+  <text x="300" y="100" font-size="11" fill="var(--eu)" font-weight="600">Eu 형광 — 수백 µs 지속</text>
+  <text id="lblGate" x="0" y="226" text-anchor="middle" font-size="11" fill="var(--gate)" font-weight="600">측정 게이트</text>
+  <text x="600" y="226" font-size="11" fill="var(--muted)">시간 →</text>
+</svg>
+
+<div class="controls">
+  <button id="play">⏸ 일시정지</button>
+  <label>
+    <span class="row"><span>지연 (delay)</span><b id="dVal">300 µs</b></span>
+    <input type="range" id="delay" min="100" max="800" value="300" step="10">
+  </label>
+  <label>
+    <span class="row"><span>게이트 폭 (gate)</span><b id="gVal">400 µs</b></span>
+    <input type="range" id="gate" min="100" max="1000" value="400" step="10">
+  </label>
+</div>
+
+<div class="readout">
+  <div class="stat"><div class="k">게이트 내 Eu 신호</div><div class="v" id="euOut">–</div></div>
+  <div class="stat"><div class="k">게이트 내 배경</div><div class="v" id="bgOut">–</div></div>
+  <div class="stat"><div class="k">신호 / 배경 비</div><div class="v" id="ratioOut">–</div></div>
+</div>
+</div>
+
+<div class="note">
+<b>핵심.</b> 광학 배치는 여기광이 검출기로 새지 않게 90° 틀어둔 것뿐이고, 진짜 배경 제거는 시간축에서 일어난다. 지연을 키워 배경이 죽은 뒤 게이트를 열면 신호/배경 비가 급등한다 — 이게 dichroic mirror 없이도 깨끗한 신호를 얻는 TRF의 원리. 타이밍·수명 값은 표준 Eu-TRF(DELFIA류) 기준 <b>추정치</b>로, Objet 실제 펄스 시퀀스는 검출 회로·LED 구동에 맞춰 튜닝될 값.
+</div>
+</div>
+
+<script>
+(function(){
+  var X0=70, X1=624, Y0=40, Y1=210, TMAX=2000, PULSE=100, TAU_EU=600, TAU_BG=2.2;
+  var xT=function(t){return X0+(t/TMAX)*(X1-X0);};
+  var yS=function(s){return Y1-(Y1-Y0)*s;};
+  var euAt=function(t){return t<0?0:(t<PULSE? t/PULSE : Math.exp(-(t-PULSE)/TAU_EU));};
+  var bgAt=function(t){return t<0?0:(t<PULSE? t/PULSE : Math.exp(-(t-PULSE)/TAU_BG));};
+
+  var eu=document.getElementById('euCurve'), bg=document.getElementById('bgCurve'),
+      pulse=document.getElementById('pulse');
+  var ep="", bp="";
+  for(var t=0;t<=TMAX;t+=8){ ep+=xT(t)+","+yS(euAt(t))+" "; bp+=xT(t)+","+yS(bgAt(t))+" "; }
+  eu.setAttribute('points',ep); bg.setAttribute('points',bp);
+  pulse.setAttribute('d','M'+xT(0)+' '+Y1+' L'+xT(0)+' '+yS(1)+' L'+xT(PULSE)+' '+yS(1)+' L'+xT(PULSE)+' '+Y1+' Z');
+
+  var dEl=document.getElementById('delay'), gEl=document.getElementById('gate'),
+      dVal=document.getElementById('dVal'), gVal=document.getElementById('gVal'),
+      delayBox=document.getElementById('delayBox'), gateBox=document.getElementById('gateBox'),
+      lblGate=document.getElementById('lblGate'),
+      euOut=document.getElementById('euOut'), bgOut=document.getElementById('bgOut'),
+      ratioOut=document.getElementById('ratioOut');
+
+  var integ=function(fn,a,b){var s=0;for(var t=a;t<b;t+=2)s+=fn(t)*2;return s;};
+  var EU_TOTAL=integ(euAt,0,TMAX);
+  var gateStart=300, gateEnd=700;
+
+  function update(){
+    var d=+dEl.value, g=+gEl.value, end=Math.min(d+g,TMAX);
+    gateStart=d; gateEnd=end;
+    dVal.textContent=d+' µs'; gVal.textContent=g+' µs';
+    delayBox.setAttribute('x',xT(PULSE)); delayBox.setAttribute('width',Math.max(0,xT(d)-xT(PULSE)));
+    gateBox.setAttribute('x',xT(d)); gateBox.setAttribute('width',xT(end)-xT(d));
+    lblGate.setAttribute('x',(xT(d)+xT(end))/2);
+    var euI=integ(euAt,d,end), bgI=integ(bgAt,d,end);
+    euOut.textContent=Math.round(euI/EU_TOTAL*100)+'%';
+    bgOut.textContent=bgI<1?bgI.toFixed(2):Math.round(bgI);
+    var r=euI/(bgI+0.01);
+    ratioOut.textContent=r>999?'>999×':(r>=10?Math.round(r)+'×':r.toFixed(1)+'×');
+  }
+  dEl.addEventListener('input',update); gEl.addEventListener('input',update); update();
+
+  var cursor=document.getElementById('cursor'), exB=document.getElementById('exBeam'),
+      emB=document.getElementById('emBeam'), sample=document.getElementById('sample'),
+      marker=document.getElementById('euMarker');
+  var RUN=2600, PAUSE=900, CYCLE=RUN+PAUSE, anchor=null, playing=true, raf=null;
+
+  function frame(ts){
+    if(anchor===null) anchor=ts;
+    var e=(ts-anchor)%CYCLE;
+    if(e<=RUN){
+      var t=(e/RUN)*TMAX, s=euAt(t);
+      cursor.setAttribute('opacity','0.85');
+      cursor.setAttribute('x1',xT(t)); cursor.setAttribute('x2',xT(t));
+      marker.setAttribute('opacity','1');
+      marker.setAttribute('cx',xT(t)); marker.setAttribute('cy',yS(s));
+      var inGate = t>=gateStart && t<=gateEnd;
+      marker.setAttribute('fill', inGate ? 'var(--gate)' : 'var(--eu)');
+      marker.setAttribute('r', inGate ? '6' : '4.5');
+      exB.style.opacity = t<PULSE ? '1' : '0.15';
+      emB.style.opacity = t<PULSE ? '0.15' : (0.15+0.85*s).toFixed(2);
+      sample.setAttribute('stroke-width', (1.4+2.4*s).toFixed(2));
+    } else {
+      cursor.setAttribute('opacity','0'); marker.setAttribute('opacity','0');
+      exB.style.opacity='0.15'; emB.style.opacity='0.15'; sample.setAttribute('stroke-width','1.4');
+    }
+    raf=requestAnimationFrame(frame);
+  }
+
+  var btn=document.getElementById('play');
+  function start(){ playing=true; anchor=null; btn.textContent='⏸ 일시정지'; raf=requestAnimationFrame(frame); }
+  function stop(){ playing=false; cancelAnimationFrame(raf); btn.textContent='▶ 재생';
+    cursor.setAttribute('opacity','0'); marker.setAttribute('opacity','0');
+    exB.style.opacity='0.15'; emB.style.opacity='0.15'; sample.setAttribute('stroke-width','1.4'); }
+  btn.addEventListener('click',function(){ playing?stop():start(); });
+
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ stop(); }
+  else { start(); }
+})();
+</script>
+</body>
+</html>
