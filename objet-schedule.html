@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBJET 개발 컨트롤타워</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --su-red: #E60044;
+  --su-red-light: #FFF0F5;
+  --su-gray: #727171;
+  --bg: #F8F8F9;
+  --surface: #FFFFFF;
+  --border: #E4E6EA;
+  --border-strong: #CBD0D8;
+  --text-1: #111827;
+  --text-2: #4B5563;
+  --text-3: #9CA3AF;
+  --done-c: #15803D; --done-bg: #DCFCE7;
+  --prog-c: #1D4ED8; --prog-bg: #DBEAFE;
+  --wait-c: #6B7280; --wait-bg: #F3F4F6;
+  --block-c: #DC2626; --block-bg: #FEE2E2;
+  --gate-c: #92400E; --gate-bg: #FEF3C7;
+  --radius: 10px;
+  --r-sm: 6px;
+  --mono: 'Space Mono', 'Courier New', monospace;
+  --sans: 'Pretendard Variable', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:13px;line-height:1.5;padding:14px;max-width:960px;margin:0 auto}
+button{font-family:inherit;cursor:pointer}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hdr-accent{width:5px;height:36px;background:var(--su-red);border-radius:3px;flex-shrink:0}
+.hdr-title{font-size:15px;font-weight:800;letter-spacing:-0.02em}
+.hdr-sub{font-size:11px;color:var(--text-2);margin-top:1px}
+.today-pill{margin-left:auto;text-align:right}
+.today-pill .chip{display:inline-flex;align-items:center;gap:5px;background:var(--su-red);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.d1-warn{margin-top:5px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--su-red);background:var(--su-red-light);padding:2px 8px;border-radius:10px;display:inline-block}
+
+/* ── Alert Bar ── */
+.alert-bar{background:#FFF0F5;border:1.5px solid var(--su-red);border-radius:var(--r-sm);padding:9px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px}
+.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.alert-text{font-size:12px;font-weight:600;color:var(--su-red);line-height:1.5}
+.alert-text span{font-weight:400;color:#7F1D1D}
+
+/* ── Card / Section ── */
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.card-hdr{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.06em}
+.card-hdr-icon{font-size:13px}
+.card-body{padding:14px}
+
+/* ── Gates ── */
+.gates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gate-btn{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;transition:border-color .15s,box-shadow .15s,background .15s}
+.gate-btn:hover{border-color:var(--su-red);box-shadow:0 0 0 2px rgba(230,0,68,.1)}
+.gate-btn.active{border-color:var(--su-red);background:var(--su-red-light);box-shadow:0 0 0 3px rgba(230,0,68,.12)}
+.gate-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.gate-label{font-size:13px;font-weight:700}
+.status-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.status-tag.resolved{background:var(--done-bg);color:var(--done-c)}
+.status-tag.pending{background:var(--gate-bg);color:var(--gate-c)}
+.gate-note{font-size:11px;color:var(--text-2);line-height:1.4}
+.gate-affects{font-size:10px;color:var(--su-red);font-weight:600;margin-top:6px}
+
+/* ── Phase Timeline ── */
+.tl-outer{padding:4px 0 8px}
+.tl-track-wrap{position:relative;height:48px;margin:0 0 6px}
+.tl-track{position:absolute;top:24px;left:0;right:0;height:8px;background:var(--border);border-radius:4px;overflow:visible}
+.tl-segment{position:absolute;height:100%;border-radius:4px;top:0}
+.tl-today{position:absolute;top:-18px;width:2px;background:var(--su-red);border-radius:1px;z-index:10}
+.tl-today-tip{position:absolute;top:-18px;transform:translateX(-50%);background:var(--su-red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.tl-marker{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
+.tl-marker-id{font-size:9px;font-family:var(--mono);font-weight:700;white-space:nowrap}
+.tl-marker-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;position:relative;z-index:5;margin:1px 0}
+.tl-marker-date{font-family:var(--mono);font-size:8px;color:var(--text-3)}
+.tl-ruler{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--text-3);padding:0 0 0}
+.phase-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.phase-card{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 12px}
+.phase-card.current{border-color:var(--su-red);background:linear-gradient(135deg,var(--su-red-light) 0%,#fff 100%)}
+.phase-card.done-phase{border-color:var(--border);opacity:.8}
+.pc-id{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-0.04em}
+.pc-name{font-size:11px;color:var(--text-2);margin-bottom:2px}
+.pc-sub{font-size:10px;color:var(--text-3);margin-bottom:8px}
+.pc-due{font-family:var(--mono);font-size:10px;margin-bottom:8px}
+.pc-due.urgent{color:var(--su-red);font-weight:700}
+.prog-wrap{background:var(--border);height:5px;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px}
+.prog-pct{font-family:var(--mono);font-size:11px;font-weight:700;text-align:right;margin-top:3px}
+
+/* ── Swim Lanes ── */
+.phase-group-label{padding:8px 14px 4px;font-size:10px;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--border)}
+.phase-group-label:first-child{border-top:none}
+.swim-lane{border-bottom:1px solid var(--border)}
+.swim-lane:last-child{border-bottom:none}
+.lane-hdr{display:flex;align-items:center;gap:7px;padding:7px 14px;background:#FAFAFA;cursor:pointer;user-select:none;border-bottom:1px solid var(--border)}
+.lane-hdr:hover{background:#F3F4F6}
+.vendor-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.vendor-name{font-weight:700;font-size:12px}
+.phase-pip{font-size:9px;padding:1px 5px;border-radius:8px;background:var(--border);color:var(--text-3);font-family:var(--mono)}
+.blocker-warn{font-size:10px;color:var(--su-red);font-weight:700;margin-left:3px}
+.task-count{margin-left:auto;font-size:10px;color:var(--text-3);font-family:var(--mono)}
+.lane-body{padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.unassigned-wrap{padding:8px 14px 12px}
+.unassigned-label{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.unassigned-tasks{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ── Task Card ── */
+.task-card{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:9px 10px;min-width:150px;max-width:210px;flex:1 1 150px;transition:border-color .15s,box-shadow .15s}
+.task-card.hl{border-color:var(--su-red)!important;box-shadow:0 0 0 3px rgba(230,0,68,.15)}
+.task-card.s-done{border-left:3px solid var(--done-c)}
+.task-card.s-in-progress{border-left:3px solid var(--prog-c)}
+.task-card.s-waiting{border-left:3px solid var(--border-strong)}
+.task-card.s-blocked{border-left:3px solid var(--su-red)}
+.tc-top{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.sc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
+.sc.done{background:var(--done-bg);color:var(--done-c)}
+.sc.in-progress{background:var(--prog-bg);color:var(--prog-c)}
+.sc.waiting{background:var(--wait-bg);color:var(--wait-c)}
+.sc.blocked{background:var(--block-bg);color:var(--block-c)}
+.sc-qty{font-size:9px;font-family:var(--mono);color:var(--text-3)}
+.tc-label{font-size:12px;font-weight:500;line-height:1.4}
+.tc-phase{font-size:9px;font-family:var(--mono);color:var(--text-3);margin-top:3px}
+.blocker-badge{display:flex;align-items:flex-start;gap:4px;background:var(--block-bg);border-radius:4px;padding:4px 6px;margin-top:7px;font-size:10px;color:#7F1D1D;line-height:1.4}
+.gate-badge{display:inline-flex;align-items:center;gap:3px;background:var(--gate-bg);color:var(--gate-c);border-radius:4px;padding:2px 5px;font-size:9px;font-weight:700;margin-top:5px}
+.toggle-btn{background:none;border:none;font-size:10px;color:var(--text-3);padding:2px 4px;border-radius:3px;margin-left:auto;flex-shrink:0}
+.toggle-btn:hover{background:var(--border);color:var(--text-2)}
+
+/* ── Legend ── */
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--border);background:#FAFAFA}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-2)}
+.leg-note{margin-left:auto;font-size:10px;color:var(--text-3)}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .gates-grid{grid-template-columns:1fr}
+  .phase-cards{grid-template-columns:1fr}
+  .task-card{max-width:100%}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════
+const TODAY_STR = '2026-06-23';
+const TODAY = new Date(TODAY_STR);
+
+const PHASES = [
+  { id:'D0', label:'시작품 1st', sub:'검토 완료', start:'2026-03-01', due:'2026-05-30', progress:100, status:'done',        color:'#15803D', note:'' },
+  { id:'D1', label:'시작품 2nd', sub:'수정 및 제작', start:'2026-06-01', due:'2026-06-30', progress:30,  status:'in-progress', color:'#1D4ED8', note:'' },
+  { id:'D2', label:'시제품 1st', sub:'설계 및 제작',  start:'2026-07-01', due:'2026-08-30', progress:0,   status:'waiting',     color:'#9CA3AF', note:'모델솔루션 & 디자인시대 (지역주력과제)' }
+];
+
+const VENDORS = [
+  { id:'motionbank',    name:'모션뱅크',    color:'#7C3AED', phases:['D1'] },
+  { id:'suseong',       name:'수성아트텍',  color:'#0891B2', phases:['D1'] },
+  { id:'bespecx',       name:'베스펙스',    color:'#EA580C', phases:['D1'] },
+  { id:'modelsolution', name:'모델솔루션',  color:'#D97706', phases:['D2'] },
+  { id:'designsidae',   name:'디자인시대',  color:'#059669', phases:['D2'] },
+  { id:'ghosdesign',    name:'고스디자인',  color:'#DB2777', phases:['D2'] }
+];
+
+const GATES = [
+  {
+    id:'nfc',
+    icon:'📡',
+    label:'NFC 적용 여부',
+    status:'resolved',
+    resolution:'D1 미적용 확정',
+    note:'D1에서 NFC 미적용 확정. D2 단계에서 재결정 예정 — 적용 시 전체 일정 변경.',
+    affects:['t05','t17']
+  },
+  {
+    id:'gui-vendor',
+    icon:'🎨',
+    label:'GUI 외주처 확정',
+    status:'pending',
+    note:'고스디자인 잠정. D2 착수 전 공식 확정 필요.',
+    affects:['t16']
+  }
+];
+
+// status: 'done' | 'in-progress' | 'waiting' | 'blocked'
+const TASKS = [
+  // ── D1 / 모션뱅크 ──
+  { id:'t01', phase:'D1', owner:'motionbank',    label:'파워버튼 보드 레이아웃 전달',       status:'done',        dependsOn:[], qty:null,   gate:null,        blocker:null },
+  { id:'t02', phase:'D1', owner:'motionbank',    label:'보드 5종 제작',                     status:'in-progress', dependsOn:['t01'], qty:'3set', gate:null,   blocker:null },
+  { id:'t03', phase:'D1', owner:'motionbank',    label:'TRF 광학 균일도·재현성 확보',        status:'in-progress', dependsOn:[], qty:null,   gate:null,        blocker:null },
+  // ── D1 / 수성아트텍 ──
+  { id:'t04', phase:'D1', owner:'suseong',       label:'워킹 목업 제작',                    status:'in-progress', dependsOn:[], qty:'3set', gate:null,        blocker:null },
+  { id:'t11', phase:'D1', owner:'suseong',       label:'카세트 제작 (창 넓힘)',              status:'waiting',     dependsOn:['t10'], qty:'3set', gate:null,   blocker:'← TRF 성능확인 완료 대기' },
+  // ── D1 / 베스펙스 ──
+  { id:'t09', phase:'D1', owner:'bespecx',       label:'테스트 App 개발',                   status:'in-progress', dependsOn:[], qty:null,   gate:null,        blocker:null },
+  // ── D1 / 미배정 ──
+  { id:'t05', phase:'D1', owner:null,            label:'NFC 미적용 확정',                   status:'done',        dependsOn:[], qty:null,   gate:'nfc',       blocker:null },
+  { id:'t06', phase:'D1', owner:null,            label:'배터리 양면테이프 고정',              status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  { id:'t07', phase:'D1', owner:null,            label:'시작품 GUI 사용 확정',               status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  { id:'t08', phase:'D1', owner:null,            label:'App 연동 동작 시나리오 확인',         status:'waiting',     dependsOn:['t07','t09'], qty:null, gate:null, blocker:'← GUI 확정 + App 개발 완료 대기' },
+  { id:'t10', phase:'D1', owner:null,            label:'시약을 통한 TRF 성능 확인',           status:'blocked',     dependsOn:['t03'], qty:null, gate:null,     blocker:'← TRF 재현성 확보 완료 대기' },
+  { id:'t12', phase:'D1', owner:null,            label:'디핑 스틱 시작품 제작 (Stick-D0)',   status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  // ── D2 / 모델솔루션 ──
+  { id:'t13', phase:'D2', owner:'modelsolution', label:'CMF 적용',                          status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  { id:'t14', phase:'D2', owner:'modelsolution', label:'파워버튼·Door·LCD 기구 설계',        status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  // ── D2 / 디자인시대 ──
+  { id:'t15', phase:'D2', owner:'designsidae',   label:'파우치·포장 케이스 디자인·제작',      status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
+  // ── D2 / 고스디자인 ──
+  { id:'t16', phase:'D2', owner:'ghosdesign',    label:'GUI 외주 개발',                     status:'waiting',     dependsOn:[], qty:null,   gate:'gui-vendor', blocker:null },
+  // ── D2 / 미배정 ──
+  { id:'t17', phase:'D2', owner:null,            label:'NFC 적용 여부 재결정 (D2)',          status:'waiting',     dependsOn:[], qty:null,   gate:'nfc',       blocker:'← 적용 시 전체 일정 변경' }
+];
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let activeGate = null;
+
+// localStorage status overrides (fallback-safe)
+function saveStatus(id, status) {
+  try { localStorage.setItem('objet_s_' + id, status); } catch(e){}
+}
+function loadStatus(id) {
+  try { return localStorage.getItem('objet_s_' + id); } catch(e){ return null; }
+}
+function getStatus(task) {
+  return loadStatus(task.id) || task.status;
+}
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function daysLeft(dueStr) {
+  return daysBetween(TODAY, new Date(dueStr));
+}
+function fmtDate(str) {
+  const d = new Date(str);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+const STATUS_LABEL = { done:'완료', 'in-progress':'진행', waiting:'대기', blocked:'막힘' };
+const STATUS_ICON  = { done:'✓', 'in-progress':'↻', waiting:'○', blocked:'✕' };
+const STATUS_CLS   = { done:'done', 'in-progress':'in-progress', waiting:'waiting', blocked:'blocked' };
+function sc(s){ return `<span class="sc ${STATUS_CLS[s]}" role="img" aria-label="${STATUS_LABEL[s]}"><span aria-hidden="true">${STATUS_ICON[s]}</span> ${STATUS_LABEL[s]}</span>`; }
+
+// ════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════
+function render() {
+  document.getElementById('app').innerHTML = [
+    renderHeader(),
+    renderAlertBar(),
+    renderGates(),
+    renderTimeline(),
+    renderSwimLanes(),
+    renderLegend()
+  ].join('');
+  bind();
+}
+
+// ── Header ──────────────────────────────────
+function renderHeader() {
+  const rem = daysLeft('2026-06-30');
+  const warnLabel = rem <= 0 ? '⚠ D1 마감 초과!' : `⚠ D1 마감 ${rem}일 전`;
+  return `
+<div class="hdr">
+  <div class="hdr-accent"></div>
+  <div>
+    <div class="hdr-title">OBJET 개발 컨트롤타워</div>
+    <div class="hdr-sub">Surearly · 미희님 (SuGenTech) · 6개 외주처 모니터링</div>
+  </div>
+  <div class="today-pill">
+    <div class="chip">TODAY&nbsp;&nbsp;2026.06.23</div>
+    <div class="d1-warn">${warnLabel}</div>
+  </div>
+</div>`;
+}
+
+// ── Alert Bar ────────────────────────────────
+function renderAlertBar() {
+  const blockedTasks = TASKS.filter(t => getStatus(t) === 'blocked');
+  const pendingGates = GATES.filter(g => g.status === 'pending');
+  if (blockedTasks.length === 0 && pendingGates.length === 0) return '';
+  const lines = [];
+  blockedTasks.forEach(t => lines.push(`<b>${t.label}</b> — ${t.blocker || '블로커 존재'}`));
+  pendingGates.forEach(g => lines.push(`<b>미결 게이트:</b> ${g.label} — ${g.note}`));
+  return `
+<div class="alert-bar">
+  <span class="alert-icon">🚨</span>
+  <div class="alert-text">
+    지금 막힌 항목 / 미결 게이트<br>
+    <span>${lines.join('<br>')}</span>
+  </div>
+</div>`;
+}
+
+// ── Decision Gates ───────────────────────────
+function renderGates() {
+  return `
+<div class="card">
+  <div class="card-hdr"><span class="card-hdr-icon">▲</span>의사결정 게이트 (Decision Gates)</div>
+  <div class="card-body">
+    <div class="gates-grid">
+      ${GATES.map(g => {
+        const isActive = activeGate === g.id;
+        const stag = g.status === 'resolved'
+          ? `<span class="status-tag resolved">✓ ${g.resolution}</span>`
+          : `<span class="status-tag pending">⚠ 미결정</span>`;
+        const affCount = g.affects.length;
+        return `
+<button class="gate-btn${isActive?' active':''}" onclick="toggleGate('${g.id}')" aria-pressed="${isActive}">
+  <div class="gate-row">${g.icon} <span class="gate-label">${g.label}</span> ${stag}</div>
+  <div class="gate-note">${g.note}</div>
+  <div class="gate-affects">▸ 영향 태스크 ${affCount}개 클릭하면 하이라이트${isActive?' (활성)':''}</div>
+</button>`;
+      }).join('')}
+    </div>
+  </div>
+</div>`;
+}
+
+// ── Phase Timeline ───────────────────────────
+function renderTimeline() {
+  const TL_START = new Date('2026-04-01');
+  const TL_END   = new Date('2026-09-30');
+  const total = daysBetween(TL_START, TL_END);
+  const pct  = (str) => (daysBetween(TL_START, new Date(str)) / total * 100).toFixed(2) + '%';
+  const pctN = (str) => daysBetween(TL_START, new Date(str)) / total * 100;
+
+  const PHASE_COLOR = { done:'#15803D', 'in-progress':'#1D4ED8', waiting:'#D1D5DB' };
+
+  const segments = PHASES.map(p => {
+    const l = pctN(p.start); const r = pctN(p.due);
+    const w = r - l;
+    const c = PHASE_COLOR[p.status];
+    const op = p.status === 'waiting' ? 0.4 : 0.85;
+    return `<div class="tl-segment" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${c};opacity:${op}"></div>`;
+  }).join('');
+
+  const todayL = pctN(TODAY_STR);
+  const todayEl = `
+    <div class="tl-today" style="left:${todayL.toFixed(2)}%;top:-18px;height:44px">
+      <div class="tl-today-tip">TODAY</div>
+    </div>`;
+
+  const markers = PHASES.map(p => {
+    const l = pctN(p.due);
+    const c = PHASE_COLOR[p.status];
+    return `
+<div class="tl-marker" style="left:${l.toFixed(2)}%;top:-2px">
+  <div class="tl-marker-id" style="color:${c}">${p.id}</div>
+  <div class="tl-marker-dot" style="background:${c}"></div>
+  <div class="tl-marker-date">${fmtDate(p.due)}</div>
+</div>`;
+  }).join('');
+
+  const rulerLabels = ['4/1','5/1','6/1','7/1','8/1','9/1','9/30'];
+
+  const phaseCards = PHASES.map(p => {
+    const rem = daysLeft(p.due);
+    const isCur = p.status === 'in-progress';
+    const isDone = p.status === 'done';
+    const c = PHASE_COLOR[p.status];
+    const dueLabel = isDone ? `완료 (${fmtDate(p.due)})` : isCur ? `${fmtDate(p.due)} 마감 · ${rem}일 후` : `목표 ${fmtDate(p.due)}`;
+    const cls = isDone ? 'done-phase' : isCur ? 'current' : '';
+    return `
+<div class="phase-card ${cls}">
+  <div class="pc-id" style="color:${c}">${p.id}</div>
+  <div class="pc-name">${p.label}</div>
+  <div class="pc-sub">${p.sub}${p.note ? ' · '+p.note : ''}</div>
+  <div class="pc-due${isCur&&rem<=7?' urgent':''}">${dueLabel}</div>
+  <div class="prog-wrap"><div class="prog-fill" style="width:${p.progress}%;background:${c}"></div></div>
+  <div class="prog-pct" style="color:${c}">${p.progress}%</div>
+</div>`;
+  }).join('');
+
+  return `
+<div class="card">
+  <div class="card-hdr"><span class="card-hdr-icon">▶</span>Phase 타임라인</div>
+  <div class="card-body">
+    <div class="tl-outer">
+      <div class="tl-track-wrap">
+        <div class="tl-track">
+          ${segments}
+          ${todayEl}
+          ${markers}
+        </div>
+      </div>
+      <div class="tl-ruler">
+        ${rulerLabels.map(l=>`<span>${l}</span>`).join('')}
+      </div>
+    </div>
+    <div class="phase-cards">${phaseCards}</div>
+  </div>
+</div>`;
+}
+
+// ── Swim Lanes ───────────────────────────────
+function renderSwimLanes() {
+  const byVendor = {};
+  VENDORS.forEach(v => { byVendor[v.id] = []; });
+  const unassigned = { D1:[], D2:[] };
+
+  TASKS.forEach(t => {
+    if (t.owner && byVendor[t.owner]) byVendor[t.owner].push(t);
+    else if (!t.owner && unassigned[t.phase]) unassigned[t.phase].push(t);
+  });
+
+  const d1v = VENDORS.filter(v => v.phases.includes('D1'));
+  const d2v = VENDORS.filter(v => v.phases.includes('D2'));
+
+  const sections = [
+    { phase:'D1', label:'D1 — 시작품 2nd (~6/30)', vendors:d1v },
+    { phase:'D2', label:'D2 — 시제품 1st (~8/30)', vendors:d2v }
+  ];
+
+  return `
+<div class="card">
+  <div class="card-hdr"><span class="card-hdr-icon">◈</span>벤더 Swim Lane</div>
+  ${sections.map(sec => `
+    <div class="phase-group-label">${sec.label}</div>
+    ${sec.vendors.map(v => renderLane(v, byVendor[v.id])).join('')}
+    ${renderUnassigned(unassigned[sec.phase], sec.phase + ' 기타 태스크')}
+  `).join('')}
+</div>`;
+}
+
+function renderLane(vendor, tasks) {
+  if (!tasks || tasks.length === 0) return '';
+  const taskStatuses = tasks.map(t => getStatus(t));
+  const blockedN = taskStatuses.filter(s => s === 'blocked').length;
+  const doneN    = taskStatuses.filter(s => s === 'done').length;
+  return `
+<div class="swim-lane">
+  <div class="lane-hdr">
+    <div class="vendor-dot" style="background:${vendor.color}"></div>
+    <div class="vendor-name">${vendor.name}</div>
+    ${vendor.phases.map(p=>`<span class="phase-pip">${p}</span>`).join('')}
+    ${blockedN > 0 ? `<span class="blocker-warn">⛔ 막힘 ${blockedN}</span>` : ''}
+    <span class="task-count">${doneN}/${tasks.length}</span>
+  </div>
+  <div class="lane-body">${tasks.map(t => renderTaskCard(t)).join('')}</div>
+</div>`;
+}
+
+function renderUnassigned(tasks, title) {
+  if (!tasks || tasks.length === 0) return '';
+  return `
+<div class="unassigned-wrap">
+  <div class="unassigned-label">${title}</div>
+  <div class="unassigned-tasks">${tasks.map(t => renderTaskCard(t)).join('')}</div>
+</div>`;
+}
+
+function renderTaskCard(task) {
+  const eff = getStatus(task);
+  const isHl = activeGate && GATES.find(g=>g.id===activeGate)?.affects.includes(task.id);
+  const gateData = task.gate ? GATES.find(g=>g.id===task.gate) : null;
+  const blockerText = task.blocker || null;
+
+  // next status cycle for toggle
+  const cycle = { done:'in-progress', 'in-progress':'waiting', waiting:'blocked', blocked:'done' };
+  const nextS = cycle[eff];
+
+  return `
+<div class="task-card s-${eff}${isHl?' hl':''}" id="tc-${task.id}">
+  <div class="tc-top">
+    ${sc(eff)}
+    ${task.qty ? `<span class="sc-qty">${task.qty}</span>` : ''}
+    <button class="toggle-btn" onclick="cycleStatus('${task.id}')" title="상태 변경 → ${STATUS_LABEL[nextS]}">⇄</button>
+  </div>
+  <div class="tc-label">${task.label}</div>
+  <div class="tc-phase">${task.phase}</div>
+  ${blockerText && eff !== 'done' ? `<div class="blocker-badge"><span aria-hidden="true">⛔</span><span>${blockerText}</span></div>` : ''}
+  ${gateData ? `<div class="gate-badge">🔀 ${gateData.label}</div>` : ''}
+</div>`;
+}
+
+// ── Legend ───────────────────────────────────
+function renderLegend() {
+  return `
+<div class="card">
+  <div class="legend">
+    <div class="leg-item">${sc('done')}</div>
+    <div class="leg-item">${sc('in-progress')}</div>
+    <div class="leg-item">${sc('waiting')}</div>
+    <div class="leg-item">${sc('blocked')}</div>
+    <div class="leg-item" style="font-size:9px;color:var(--text-3);margin-left:4px">⇄ 카드 우상단 버튼으로 상태 토글 (localStorage 저장)</div>
+    <div class="leg-note">색 + 아이콘 병행 · WCAG AA</div>
+  </div>
+</div>`;
+}
+
+// ════════════════════════════════════════════
+// EVENTS
+// ════════════════════════════════════════════
+function bind() { /* inline onclick 사용 */ }
+
+function toggleGate(id) {
+  activeGate = (activeGate === id) ? null : id;
+  render();
+}
+
+function cycleStatus(taskId) {
+  const task = TASKS.find(t => t.id === taskId);
+  if (!task) return;
+  const cycle = { done:'in-progress', 'in-progress':'waiting', waiting:'blocked', blocked:'done' };
+  const cur = getStatus(task);
+  const next = cycle[cur] || 'waiting';
+  saveStatus(taskId, next);
+  render();
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
