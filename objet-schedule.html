@@ -6,520 +6,510 @@
 <title>OBJET 개발 컨트롤타워</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --su-red: #E60044;
-  --su-red-light: #FFF0F5;
-  --su-gray: #727171;
-  --bg: #F8F8F9;
-  --surface: #FFFFFF;
-  --border: #E4E6EA;
-  --border-strong: #CBD0D8;
-  --text-1: #111827;
-  --text-2: #4B5563;
-  --text-3: #9CA3AF;
-  --done-c: #15803D; --done-bg: #DCFCE7;
-  --prog-c: #1D4ED8; --prog-bg: #DBEAFE;
-  --wait-c: #6B7280; --wait-bg: #F3F4F6;
-  --block-c: #DC2626; --block-bg: #FEE2E2;
-  --gate-c: #92400E; --gate-bg: #FEF3C7;
-  --radius: 10px;
-  --r-sm: 6px;
-  --mono: 'Space Mono', 'Courier New', monospace;
-  --sans: 'Pretendard Variable', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
-  --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+:root{
+  --su-red:#E60044;--su-red-l:#FFF0F5;--bg:#F3F4F6;--surface:#fff;
+  --border:#E4E6EA;--border-s:#CBD0D8;--text1:#111827;--text2:#4B5563;--text3:#9CA3AF;
+  --done-c:#15803D;--done-bg:#DCFCE7;--prog-c:#1D4ED8;--prog-bg:#DBEAFE;
+  --wait-c:#6B7280;--wait-bg:#F3F4F6;--blk-c:#DC2626;--blk-bg:#FEE2E2;
+  --gate-c:#92400E;--gate-bg:#FEF3C7;
+  --r:10px;--rs:6px;
+  --mono:'Space Mono','Courier New',monospace;
+  --sans:'Pretendard Variable','Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --sh:0 1px 4px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:13px;line-height:1.5;padding:14px;max-width:960px;margin:0 auto}
 button{font-family:inherit;cursor:pointer}
+body{font-family:var(--sans);background:var(--bg);color:var(--text1);font-size:13px;line-height:1.5;padding:14px;max-width:980px;margin:0 auto}
 
-/* ── Header ── */
-.hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow)}
-.hdr-accent{width:5px;height:36px;background:var(--su-red);border-radius:3px;flex-shrink:0}
-.hdr-title{font-size:15px;font-weight:800;letter-spacing:-0.02em}
-.hdr-sub{font-size:11px;color:var(--text-2);margin-top:1px}
-.today-pill{margin-left:auto;text-align:right}
-.today-pill .chip{display:inline-flex;align-items:center;gap:5px;background:var(--su-red);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;font-family:var(--mono)}
-.d1-warn{margin-top:5px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--su-red);background:var(--su-red-light);padding:2px 8px;border-radius:10px;display:inline-block}
+/* Header */
+.hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px}
+.hdr-bar{width:5px;height:36px;background:var(--su-red);border-radius:3px;flex-shrink:0}
+.hdr-title{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.hdr-r{margin-left:auto;text-align:right}
+.today-pill{display:inline-flex;align-items:center;gap:5px;background:var(--su-red);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.d1w{margin-top:4px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--su-red);background:var(--su-red-l);padding:2px 8px;border-radius:10px;display:inline-block}
 
-/* ── Alert Bar ── */
-.alert-bar{background:#FFF0F5;border:1.5px solid var(--su-red);border-radius:var(--r-sm);padding:9px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px}
-.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
-.alert-text{font-size:12px;font-weight:600;color:var(--su-red);line-height:1.5}
-.alert-text span{font-weight:400;color:#7F1D1D}
+/* KPI */
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.kc{background:var(--surface);border-radius:var(--rs);box-shadow:var(--sh);padding:12px 14px}
+.kc-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.kc-val{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1;margin-bottom:2px}
+.kc-sub{font-size:10px;color:var(--text2)}
+.kc.red .kc-val{color:var(--su-red)}
+.kc.grn .kc-val{color:var(--done-c)}
+.kc.blu .kc-val{color:var(--prog-c)}
 
-/* ── Card / Section ── */
-.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
-.card-hdr{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.06em}
-.card-hdr-icon{font-size:13px}
-.card-body{padding:14px}
+/* Filter bar */
+.fb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 14px;background:var(--surface);border-radius:var(--rs);box-shadow:var(--sh);margin-bottom:10px}
+.fg{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.fl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.fc{background:none;border:1.5px solid var(--border);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--text2);transition:all .12s}
+.fc:hover{border-color:var(--su-red);color:var(--su-red)}
+.fc.on{background:var(--su-red);border-color:var(--su-red);color:#fff}
+.fsep{width:1px;height:18px;background:var(--border);margin:0 2px}
+.vg{margin-left:auto;display:flex;gap:4px}
+.vb{background:none;border:1.5px solid var(--border);border-radius:var(--rs);padding:4px 10px;font-size:11px;font-weight:600;color:var(--text2);transition:all .12s}
+.vb:hover{border-color:var(--su-red);color:var(--su-red)}
+.vb.on{background:var(--text1);border-color:var(--text1);color:#fff}
+.clr{font-size:10px;color:var(--text3);border:none;background:none;padding:2px 6px;border-radius:8px}
+.clr:hover{background:var(--border)}
 
-/* ── Gates ── */
-.gates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gate-btn{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;transition:border-color .15s,box-shadow .15s,background .15s}
-.gate-btn:hover{border-color:var(--su-red);box-shadow:0 0 0 2px rgba(230,0,68,.1)}
-.gate-btn.active{border-color:var(--su-red);background:var(--su-red-light);box-shadow:0 0 0 3px rgba(230,0,68,.12)}
-.gate-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.gate-label{font-size:13px;font-weight:700}
-.status-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
-.status-tag.resolved{background:var(--done-bg);color:var(--done-c)}
-.status-tag.pending{background:var(--gate-bg);color:var(--gate-c)}
-.gate-note{font-size:11px;color:var(--text-2);line-height:1.4}
-.gate-affects{font-size:10px;color:var(--su-red);font-weight:600;margin-top:6px}
+/* Alert */
+.alert{background:var(--su-red-l);border:1.5px solid var(--su-red);border-radius:var(--rs);padding:9px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px}
+.al-txt{font-size:12px;font-weight:600;color:var(--su-red);line-height:1.5}
+.al-txt span{font-weight:400;color:#7F1D1D}
 
-/* ── Phase Timeline ── */
-.tl-outer{padding:4px 0 8px}
-.tl-track-wrap{position:relative;height:48px;margin:0 0 6px}
-.tl-track{position:absolute;top:24px;left:0;right:0;height:8px;background:var(--border);border-radius:4px;overflow:visible}
-.tl-segment{position:absolute;height:100%;border-radius:4px;top:0}
-.tl-today{position:absolute;top:-18px;width:2px;background:var(--su-red);border-radius:1px;z-index:10}
-.tl-today-tip{position:absolute;top:-18px;transform:translateX(-50%);background:var(--su-red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
-.tl-marker{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
-.tl-marker-id{font-size:9px;font-family:var(--mono);font-weight:700;white-space:nowrap}
-.tl-marker-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;position:relative;z-index:5;margin:1px 0}
-.tl-marker-date{font-family:var(--mono);font-size:8px;color:var(--text-3)}
-.tl-ruler{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--text-3);padding:0 0 0}
-.phase-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.phase-card{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 12px}
-.phase-card.current{border-color:var(--su-red);background:linear-gradient(135deg,var(--su-red-light) 0%,#fff 100%)}
-.phase-card.done-phase{border-color:var(--border);opacity:.8}
-.pc-id{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-0.04em}
-.pc-name{font-size:11px;color:var(--text-2);margin-bottom:2px}
-.pc-sub{font-size:10px;color:var(--text-3);margin-bottom:8px}
+/* Card */
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden}
+.ch{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.cb{padding:14px}
+
+/* Gates */
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gb{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:11px 13px;transition:border-color .12s,box-shadow .12s,background .12s}
+.gb:hover{border-color:var(--su-red);box-shadow:0 0 0 2px rgba(230,0,68,.1)}
+.gb.on{border-color:var(--su-red);background:var(--su-red-l);box-shadow:0 0 0 3px rgba(230,0,68,.12)}
+.gr{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap}
+.gl{font-size:13px;font-weight:700}
+.stag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.stag.ok{background:var(--done-bg);color:var(--done-c)}
+.stag.pend{background:var(--gate-bg);color:var(--gate-c)}
+.gn{font-size:11px;color:var(--text2);line-height:1.4}
+.ga{font-size:10px;color:var(--su-red);font-weight:600;margin-top:6px}
+
+/* Timeline */
+.tl{padding:4px 0 8px}
+.tlw{position:relative;height:48px;margin:0 0 6px}
+.tlt{position:absolute;top:24px;left:0;right:0;height:8px;background:var(--border);border-radius:4px;overflow:visible}
+.tls{position:absolute;height:100%;border-radius:4px;top:0}
+.tld{position:absolute;top:-18px;width:2px;background:var(--su-red);border-radius:1px;z-index:10}
+.tld-tip{position:absolute;top:-18px;transform:translateX(-50%);background:var(--su-red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.tlm{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
+.tlm-id{font-size:9px;font-family:var(--mono);font-weight:700;white-space:nowrap}
+.tlm-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;z-index:5;margin:1px 0}
+.tlm-dt{font-family:var(--mono);font-size:8px;color:var(--text3)}
+.tlr{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--text3)}
+.pcs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.pc{border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;position:relative}
+.pc.cur{border-color:var(--su-red);background:linear-gradient(135deg,var(--su-red-l) 0%,#fff 100%)}
+.pc-id{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.04em}
+.pc-nm{font-size:11px;color:var(--text2);margin-bottom:1px}
+.pc-sb{font-size:10px;color:var(--text3);margin-bottom:8px}
 .pc-due{font-family:var(--mono);font-size:10px;margin-bottom:8px}
-.pc-due.urgent{color:var(--su-red);font-weight:700}
-.prog-wrap{background:var(--border);height:5px;border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px}
-.prog-pct{font-family:var(--mono);font-size:11px;font-weight:700;text-align:right;margin-top:3px}
+.pc-due.urg{color:var(--su-red);font-weight:700}
+.pw{background:var(--border);height:5px;border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px}
+.pp{font-family:var(--mono);font-size:11px;font-weight:700;text-align:right;margin-top:3px}
+.ra{position:absolute;top:10px;right:10px;font-size:16px}
 
-/* ── Swim Lanes ── */
-.phase-group-label{padding:8px 14px 4px;font-size:10px;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--border)}
-.phase-group-label:first-child{border-top:none}
-.swim-lane{border-bottom:1px solid var(--border)}
-.swim-lane:last-child{border-bottom:none}
-.lane-hdr{display:flex;align-items:center;gap:7px;padding:7px 14px;background:#FAFAFA;cursor:pointer;user-select:none;border-bottom:1px solid var(--border)}
-.lane-hdr:hover{background:#F3F4F6}
-.vendor-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.vendor-name{font-weight:700;font-size:12px}
-.phase-pip{font-size:9px;padding:1px 5px;border-radius:8px;background:var(--border);color:var(--text-3);font-family:var(--mono)}
-.blocker-warn{font-size:10px;color:var(--su-red);font-weight:700;margin-left:3px}
-.task-count{margin-left:auto;font-size:10px;color:var(--text-3);font-family:var(--mono)}
-.lane-body{padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px}
-.unassigned-wrap{padding:8px 14px 12px}
-.unassigned-label{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-.unassigned-tasks{display:flex;flex-wrap:wrap;gap:8px}
+/* Swim lane */
+.pgl{padding:8px 14px 4px;font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--border)}
+.pgl:first-child{border-top:none}
+.sl{border-bottom:1px solid var(--border)}
+.sl:last-child{border-bottom:none}
+.lh{display:flex;align-items:center;gap:7px;padding:7px 14px;background:#FAFAFA;border-bottom:1px solid var(--border)}
+.vd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.vn{font-weight:700;font-size:12px}
+.pp2{font-size:9px;padding:1px 5px;border-radius:8px;background:var(--border);color:var(--text3);font-family:var(--mono)}
+.bw{font-size:10px;color:var(--su-red);font-weight:700}
+.tc2{margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono)}
+.lb{padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px}
+.uw{padding:8px 14px 12px;border-top:1px dashed var(--border)}
+.ul{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.ut{display:flex;flex-wrap:wrap;gap:8px}
 
-/* ── Task Card ── */
-.task-card{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:9px 10px;min-width:150px;max-width:210px;flex:1 1 150px;transition:border-color .15s,box-shadow .15s}
-.task-card.hl{border-color:var(--su-red)!important;box-shadow:0 0 0 3px rgba(230,0,68,.15)}
-.task-card.s-done{border-left:3px solid var(--done-c)}
-.task-card.s-in-progress{border-left:3px solid var(--prog-c)}
-.task-card.s-waiting{border-left:3px solid var(--border-strong)}
-.task-card.s-blocked{border-left:3px solid var(--su-red)}
-.tc-top{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+/* Task card */
+.tk{border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 10px;min-width:150px;max-width:215px;flex:1 1 150px;transition:border-color .12s,box-shadow .12s;position:relative}
+.tk.hl{border-color:var(--su-red)!important;box-shadow:0 0 0 3px rgba(230,0,68,.15)}
+.tk.s-done{border-left:3px solid var(--done-c)}
+.tk.s-in-progress{border-left:3px solid var(--prog-c)}
+.tk.s-waiting{border-left:3px solid var(--border-s)}
+.tk.s-blocked{border-left:3px solid var(--su-red)}
+.tk.cp{outline:1.5px dashed #F59E0B;outline-offset:1px}
+.tk-top{display:flex;align-items:center;gap:4px;margin-bottom:5px}
 .sc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
 .sc.done{background:var(--done-bg);color:var(--done-c)}
 .sc.in-progress{background:var(--prog-bg);color:var(--prog-c)}
 .sc.waiting{background:var(--wait-bg);color:var(--wait-c)}
-.sc.blocked{background:var(--block-bg);color:var(--block-c)}
-.sc-qty{font-size:9px;font-family:var(--mono);color:var(--text-3)}
-.tc-label{font-size:12px;font-weight:500;line-height:1.4}
-.tc-phase{font-size:9px;font-family:var(--mono);color:var(--text-3);margin-top:3px}
-.blocker-badge{display:flex;align-items:flex-start;gap:4px;background:var(--block-bg);border-radius:4px;padding:4px 6px;margin-top:7px;font-size:10px;color:#7F1D1D;line-height:1.4}
-.gate-badge{display:inline-flex;align-items:center;gap:3px;background:var(--gate-bg);color:var(--gate-c);border-radius:4px;padding:2px 5px;font-size:9px;font-weight:700;margin-top:5px}
-.toggle-btn{background:none;border:none;font-size:10px;color:var(--text-3);padding:2px 4px;border-radius:3px;margin-left:auto;flex-shrink:0}
-.toggle-btn:hover{background:var(--border);color:var(--text-2)}
+.sc.blocked{background:var(--blk-bg);color:var(--blk-c)}
+.sc-qty{font-size:9px;font-family:var(--mono);color:var(--text3)}
+.tka{margin-left:auto;display:flex;gap:2px}
+.ib{background:none;border:none;font-size:11px;color:var(--text3);padding:1px 3px;border-radius:3px}
+.ib:hover{background:var(--border);color:var(--text2)}
+.tk-lbl{font-size:12px;font-weight:500;line-height:1.4}
+.tk-meta{display:flex;align-items:center;gap:5px;margin-top:3px}
+.tk-ph{font-size:9px;font-family:var(--mono);color:var(--text3)}
+.tk-cp{font-size:9px;color:#D97706;font-weight:700}
+.tk-upd{font-size:9px;color:var(--text3);font-family:var(--mono)}
+.blk{display:flex;align-items:flex-start;gap:4px;background:var(--blk-bg);border-radius:4px;padding:4px 6px;margin-top:6px;font-size:10px;color:#7F1D1D;line-height:1.4}
+.gba{display:inline-flex;align-items:center;gap:3px;background:var(--gate-bg);color:var(--gate-c);border-radius:4px;padding:2px 5px;font-size:9px;font-weight:700;margin-top:5px}
+.na{margin-top:7px;border-top:1px solid var(--border);padding-top:6px}
+.nl{font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.nd{font-size:11px;color:var(--text2);cursor:pointer}
+.nd:hover{text-decoration:underline dotted}
+.ni{width:100%;border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:11px;font-family:var(--sans);resize:vertical;min-height:44px;outline:none}
+.ni:focus{border-color:var(--su-red)}
+.ns{margin-top:4px;font-size:10px;background:var(--su-red);color:#fff;border:none;border-radius:4px;padding:3px 8px}
 
-/* ── Legend ── */
-.legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--border);background:#FAFAFA}
-.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-2)}
-.leg-note{margin-left:auto;font-size:10px;color:var(--text-3)}
+/* Gantt */
+.gw{overflow-x:auto;padding:14px}
+.g-hdr{display:flex;margin-bottom:4px;margin-left:200px}
+.g-mo{flex:1;text-align:center;font-size:9px;font-family:var(--mono);color:var(--text3);font-weight:700;border-left:1px solid var(--border);padding:2px 0}
+.g-row{display:flex;align-items:center;min-height:30px;border-bottom:1px solid var(--border);padding:2px 0}
+.g-row:hover{background:#F9FAFB}
+.g-row.g-sep{background:#F3F4F6;border-top:2px solid var(--border);min-height:22px}
+.g-lbl{width:200px;flex-shrink:0;display:flex;align-items:center;gap:5px;padding-right:8px;overflow:hidden}
+.g-lt{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.g-trk{flex:1;position:relative;height:22px}
+.g-bar{position:absolute;height:16px;top:3px;border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:8px;color:#fff;font-weight:700;overflow:hidden;white-space:nowrap;min-width:4px}
+.g-td{position:absolute;top:0;bottom:0;width:2px;background:var(--su-red);z-index:5;pointer-events:none}
 
-/* ── Responsive ── */
-@media(max-width:600px){
-  .gates-grid{grid-template-columns:1fr}
-  .phase-cards{grid-template-columns:1fr}
-  .task-card{max-width:100%}
+/* List */
+.ltb{width:100%;border-collapse:collapse}
+.ltb th{text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:6px 10px;border-bottom:2px solid var(--border);background:#FAFAFA}
+.ltb td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.ltb tr:hover td{background:#F9FAFB}
+.ltb tr.s-b td:first-child{border-left:3px solid var(--su-red)}
+.ltb tr.s-p td:first-child{border-left:3px solid var(--prog-c)}
+
+/* Activity */
+.at-btn{width:100%;text-align:left;background:var(--surface);border:none;border-radius:var(--rs);padding:9px 14px;font-size:11px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px;box-shadow:var(--sh);margin-bottom:0}
+.at-btn:hover{background:#F3F4F6}
+.at-cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--text3)}
+.al-box{background:var(--surface);border-radius:0 0 var(--rs) var(--rs);border-top:1px solid var(--border);max-height:200px;overflow-y:auto;box-shadow:var(--sh);margin-bottom:10px}
+.ai{display:flex;align-items:flex-start;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border);font-size:11px}
+.ai:last-child{border-bottom:none}
+.ai-t{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:1px}
+.ai-f{text-decoration:line-through;color:var(--text3)}
+.ai-to{font-weight:700}
+.ai-to.done{color:var(--done-c)}
+.ai-to.in-progress{color:var(--prog-c)}
+.ai-to.waiting{color:var(--wait-c)}
+.ai-to.blocked{color:var(--blk-c)}
+
+/* Legend */
+.lgd{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--border);background:#FAFAFA}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)}
+
+@media(max-width:640px){
+  .kpi{grid-template-columns:1fr 1fr}
+  .gg{grid-template-columns:1fr}
+  .pcs{grid-template-columns:1fr}
+  .vg{margin-left:0;width:100%}
 }
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-// ════════════════════════════════════════════
-// DATA
-// ════════════════════════════════════════════
-const TODAY_STR = '2026-06-23';
-const TODAY = new Date(TODAY_STR);
+const TODAY_STR='2026-06-23', TODAY=new Date(TODAY_STR);
 
-const PHASES = [
-  { id:'D0', label:'시작품 1st', sub:'검토 완료', start:'2026-03-01', due:'2026-05-30', progress:100, status:'done',        color:'#15803D', note:'' },
-  { id:'D1', label:'시작품 2nd', sub:'수정 및 제작', start:'2026-06-01', due:'2026-06-30', progress:30,  status:'in-progress', color:'#1D4ED8', note:'' },
-  { id:'D2', label:'시제품 1st', sub:'설계 및 제작',  start:'2026-07-01', due:'2026-08-30', progress:0,   status:'waiting',     color:'#9CA3AF', note:'모델솔루션 & 디자인시대 (지역주력과제)' }
+const PHASES=[
+  {id:'D0',label:'시작품 1st',sub:'검토 완료',  start:'2026-03-01',due:'2026-05-30',progress:100,status:'done',        color:'#15803D'},
+  {id:'D1',label:'시작품 2nd',sub:'수정 및 제작',start:'2026-06-01',due:'2026-06-30',progress:30, status:'in-progress',color:'#1D4ED8'},
+  {id:'D2',label:'시제품 1st',sub:'설계 및 제작', start:'2026-07-01',due:'2026-08-30',progress:0,  status:'waiting',    color:'#9CA3AF',note:'모델솔루션 & 디자인시대'}
 ];
-
-const VENDORS = [
-  { id:'motionbank',    name:'모션뱅크',    color:'#7C3AED', phases:['D1'] },
-  { id:'suseong',       name:'수성아트텍',  color:'#0891B2', phases:['D1'] },
-  { id:'bespecx',       name:'베스펙스',    color:'#EA580C', phases:['D1'] },
-  { id:'modelsolution', name:'모델솔루션',  color:'#D97706', phases:['D2'] },
-  { id:'designsidae',   name:'디자인시대',  color:'#059669', phases:['D2'] },
-  { id:'ghosdesign',    name:'고스디자인',  color:'#DB2777', phases:['D2'] }
+const VENDORS=[
+  {id:'motionbank',   name:'모션뱅크',  color:'#7C3AED',phases:['D1']},
+  {id:'suseong',      name:'수성아트텍',color:'#0891B2',phases:['D1']},
+  {id:'bespecx',      name:'베스펙스',  color:'#EA580C',phases:['D1']},
+  {id:'modelsolution',name:'모델솔루션',color:'#D97706',phases:['D2']},
+  {id:'designsidae',  name:'디자인시대',color:'#059669',phases:['D2']},
+  {id:'ghosdesign',   name:'고스디자인',color:'#DB2777',phases:['D2']}
 ];
-
-const GATES = [
-  {
-    id:'nfc',
-    icon:'📡',
-    label:'NFC 적용 여부',
-    status:'resolved',
-    resolution:'D1 미적용 확정',
-    note:'D1에서 NFC 미적용 확정. D2 단계에서 재결정 예정 — 적용 시 전체 일정 변경.',
-    affects:['t05','t17']
-  },
-  {
-    id:'gui-vendor',
-    icon:'🎨',
-    label:'GUI 외주처 확정',
-    status:'pending',
-    note:'고스디자인 잠정. D2 착수 전 공식 확정 필요.',
-    affects:['t16']
-  }
+const GATES=[
+  {id:'nfc',      icon:'📡',label:'NFC 적용 여부',  status:'resolved',resolution:'D1 미적용 확정',note:'D1 미적용 확정. D2에서 재결정 예정 — 적용 시 전체 일정 변경.',affects:['t05','t17']},
+  {id:'gui-vendor',icon:'🎨',label:'GUI 외주처 확정',status:'pending', note:'고스디자인 잠정. D2 착수 전 확정 필요.',affects:['t16']}
 ];
-
-// status: 'done' | 'in-progress' | 'waiting' | 'blocked'
-const TASKS = [
-  // ── D1 / 모션뱅크 ──
-  { id:'t01', phase:'D1', owner:'motionbank',    label:'파워버튼 보드 레이아웃 전달',       status:'done',        dependsOn:[], qty:null,   gate:null,        blocker:null },
-  { id:'t02', phase:'D1', owner:'motionbank',    label:'보드 5종 제작',                     status:'in-progress', dependsOn:['t01'], qty:'3set', gate:null,   blocker:null },
-  { id:'t03', phase:'D1', owner:'motionbank',    label:'TRF 광학 균일도·재현성 확보',        status:'in-progress', dependsOn:[], qty:null,   gate:null,        blocker:null },
-  // ── D1 / 수성아트텍 ──
-  { id:'t04', phase:'D1', owner:'suseong',       label:'워킹 목업 제작',                    status:'in-progress', dependsOn:[], qty:'3set', gate:null,        blocker:null },
-  { id:'t11', phase:'D1', owner:'suseong',       label:'카세트 제작 (창 넓힘)',              status:'waiting',     dependsOn:['t10'], qty:'3set', gate:null,   blocker:'← TRF 성능확인 완료 대기' },
-  // ── D1 / 베스펙스 ──
-  { id:'t09', phase:'D1', owner:'bespecx',       label:'테스트 App 개발',                   status:'in-progress', dependsOn:[], qty:null,   gate:null,        blocker:null },
-  // ── D1 / 미배정 ──
-  { id:'t05', phase:'D1', owner:null,            label:'NFC 미적용 확정',                   status:'done',        dependsOn:[], qty:null,   gate:'nfc',       blocker:null },
-  { id:'t06', phase:'D1', owner:null,            label:'배터리 양면테이프 고정',              status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  { id:'t07', phase:'D1', owner:null,            label:'시작품 GUI 사용 확정',               status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  { id:'t08', phase:'D1', owner:null,            label:'App 연동 동작 시나리오 확인',         status:'waiting',     dependsOn:['t07','t09'], qty:null, gate:null, blocker:'← GUI 확정 + App 개발 완료 대기' },
-  { id:'t10', phase:'D1', owner:null,            label:'시약을 통한 TRF 성능 확인',           status:'blocked',     dependsOn:['t03'], qty:null, gate:null,     blocker:'← TRF 재현성 확보 완료 대기' },
-  { id:'t12', phase:'D1', owner:null,            label:'디핑 스틱 시작품 제작 (Stick-D0)',   status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  // ── D2 / 모델솔루션 ──
-  { id:'t13', phase:'D2', owner:'modelsolution', label:'CMF 적용',                          status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  { id:'t14', phase:'D2', owner:'modelsolution', label:'파워버튼·Door·LCD 기구 설계',        status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  // ── D2 / 디자인시대 ──
-  { id:'t15', phase:'D2', owner:'designsidae',   label:'파우치·포장 케이스 디자인·제작',      status:'waiting',     dependsOn:[], qty:null,   gate:null,        blocker:null },
-  // ── D2 / 고스디자인 ──
-  { id:'t16', phase:'D2', owner:'ghosdesign',    label:'GUI 외주 개발',                     status:'waiting',     dependsOn:[], qty:null,   gate:'gui-vendor', blocker:null },
-  // ── D2 / 미배정 ──
-  { id:'t17', phase:'D2', owner:null,            label:'NFC 적용 여부 재결정 (D2)',          status:'waiting',     dependsOn:[], qty:null,   gate:'nfc',       blocker:'← 적용 시 전체 일정 변경' }
+const TASKS=[
+  {id:'t01',phase:'D1',owner:'motionbank',   label:'파워버튼 보드 레이아웃 전달',    status:'done',       dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-07'}},
+  {id:'t02',phase:'D1',owner:'motionbank',   label:'보드 5종 제작',                  status:'in-progress',dependsOn:['t01'],  qty:'3set',gate:null,        blocker:null,                           est:{s:'2026-06-07',e:'2026-06-28'}},
+  {id:'t03',phase:'D1',owner:'motionbank',   label:'TRF 광학 균일도·재현성 확보',     status:'in-progress',dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
+  {id:'t04',phase:'D1',owner:'suseong',      label:'워킹 목업 제작',                 status:'in-progress',dependsOn:[],       qty:'3set',gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
+  {id:'t11',phase:'D1',owner:'suseong',      label:'카세트 제작 (창 넓힘)',            status:'waiting',    dependsOn:['t10'],  qty:'3set',gate:null,        blocker:'← TRF 성능확인 완료 대기',       est:{s:'2026-06-25',e:'2026-06-30'}},
+  {id:'t09',phase:'D1',owner:'bespecx',      label:'테스트 App 개발',                status:'in-progress',dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
+  {id:'t05',phase:'D1',owner:null,           label:'NFC 미적용 확정',                status:'done',       dependsOn:[],       qty:null,  gate:'nfc',       blocker:null,                           est:{s:'2026-06-01',e:'2026-06-15'}},
+  {id:'t06',phase:'D1',owner:null,           label:'배터리 양면테이프 고정',           status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-20',e:'2026-06-28'}},
+  {id:'t07',phase:'D1',owner:null,           label:'시작품 GUI 사용 확정',             status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-15',e:'2026-06-28'}},
+  {id:'t08',phase:'D1',owner:null,           label:'App 연동 동작 시나리오 확인',      status:'waiting',    dependsOn:['t07','t09'],qty:null,gate:null,      blocker:'← GUI 확정 + App 개발 완료 대기', est:{s:'2026-06-25',e:'2026-06-30'}},
+  {id:'t10',phase:'D1',owner:null,           label:'시약을 통한 TRF 성능 확인',        status:'blocked',    dependsOn:['t03'],  qty:null,  gate:null,        blocker:'← TRF 재현성 확보 완료 대기',    est:{s:'2026-06-25',e:'2026-06-30'}},
+  {id:'t12',phase:'D1',owner:null,           label:'디핑 스틱 시작품 제작 (Stick-D0)',status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-20',e:'2026-06-30'}},
+  {id:'t13',phase:'D2',owner:'modelsolution',label:'CMF 적용',                       status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-07-31'}},
+  {id:'t14',phase:'D2',owner:'modelsolution',label:'파워버튼·Door·LCD 기구 설계',     status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-08-15'}},
+  {id:'t15',phase:'D2',owner:'designsidae',  label:'파우치·포장 케이스 디자인·제작',   status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-08-15'}},
+  {id:'t16',phase:'D2',owner:'ghosdesign',   label:'GUI 외주 개발',                  status:'waiting',    dependsOn:[],       qty:null,  gate:'gui-vendor', blocker:null,                          est:{s:'2026-07-15',e:'2026-08-30'}},
+  {id:'t17',phase:'D2',owner:null,           label:'NFC 적용 여부 재결정 (D2)',       status:'waiting',    dependsOn:[],       qty:null,  gate:'nfc',       blocker:'← 적용 시 전체 일정 변경',       est:{s:'2026-07-01',e:'2026-07-15'}}
 ];
+const CP=new Set(['t03','t10','t11','t08','t09','t07']); // critical path
 
-// ════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════
-let activeGate = null;
+// ── STATE ──
+const S={activeGate:null,view:'swim',noteOpen:null,showLog:false,filters:{status:'all',vendor:'all',phase:'all'}};
 
-// localStorage status overrides (fallback-safe)
-function saveStatus(id, status) {
-  try { localStorage.setItem('objet_s_' + id, status); } catch(e){}
+// ── STORAGE ──
+const ls=(k,v)=>{try{v===undefined?localStorage.getItem(k):localStorage.setItem(k,v)}catch(e){}};
+const lg=(k)=>{try{return localStorage.getItem(k)}catch(e){return null}};
+function getSt(t){return lg('ob_s_'+t.id)||t.status}
+function getNote(id){return lg('ob_n_'+id)||''}
+function getUpd(id){return lg('ob_u_'+id)}
+function logAct(tid,from,to){
+  const t=TASKS.find(x=>x.id===tid);if(!t)return;
+  try{const l=JSON.parse(lg('ob_log')||'[]');l.unshift({ts:Date.now(),tid,lbl:t.label,from,to});if(l.length>50)l.pop();localStorage.setItem('ob_log',JSON.stringify(l));}catch(e){}
 }
-function loadStatus(id) {
-  try { return localStorage.getItem('objet_s_' + id); } catch(e){ return null; }
-}
-function getStatus(task) {
-  return loadStatus(task.id) || task.status;
-}
-
-// ════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════
-function daysBetween(a, b) {
-  return Math.round((b - a) / 86400000);
-}
-function daysLeft(dueStr) {
-  return daysBetween(TODAY, new Date(dueStr));
-}
-function fmtDate(str) {
-  const d = new Date(str);
-  return `${d.getMonth()+1}/${d.getDate()}`;
-}
-const STATUS_LABEL = { done:'완료', 'in-progress':'진행', waiting:'대기', blocked:'막힘' };
-const STATUS_ICON  = { done:'✓', 'in-progress':'↻', waiting:'○', blocked:'✕' };
-const STATUS_CLS   = { done:'done', 'in-progress':'in-progress', waiting:'waiting', blocked:'blocked' };
-function sc(s){ return `<span class="sc ${STATUS_CLS[s]}" role="img" aria-label="${STATUS_LABEL[s]}"><span aria-hidden="true">${STATUS_ICON[s]}</span> ${STATUS_LABEL[s]}</span>`; }
-
-// ════════════════════════════════════════════
-// RENDER
-// ════════════════════════════════════════════
-function render() {
-  document.getElementById('app').innerHTML = [
-    renderHeader(),
-    renderAlertBar(),
-    renderGates(),
-    renderTimeline(),
-    renderSwimLanes(),
-    renderLegend()
-  ].join('');
-  bind();
-}
-
-// ── Header ──────────────────────────────────
-function renderHeader() {
-  const rem = daysLeft('2026-06-30');
-  const warnLabel = rem <= 0 ? '⚠ D1 마감 초과!' : `⚠ D1 마감 ${rem}일 전`;
-  return `
-<div class="hdr">
-  <div class="hdr-accent"></div>
-  <div>
-    <div class="hdr-title">OBJET 개발 컨트롤타워</div>
-    <div class="hdr-sub">Surearly · 미희님 (SuGenTech) · 6개 외주처 모니터링</div>
-  </div>
-  <div class="today-pill">
-    <div class="chip">TODAY&nbsp;&nbsp;2026.06.23</div>
-    <div class="d1-warn">${warnLabel}</div>
-  </div>
-</div>`;
-}
-
-// ── Alert Bar ────────────────────────────────
-function renderAlertBar() {
-  const blockedTasks = TASKS.filter(t => getStatus(t) === 'blocked');
-  const pendingGates = GATES.filter(g => g.status === 'pending');
-  if (blockedTasks.length === 0 && pendingGates.length === 0) return '';
-  const lines = [];
-  blockedTasks.forEach(t => lines.push(`<b>${t.label}</b> — ${t.blocker || '블로커 존재'}`));
-  pendingGates.forEach(g => lines.push(`<b>미결 게이트:</b> ${g.label} — ${g.note}`));
-  return `
-<div class="alert-bar">
-  <span class="alert-icon">🚨</span>
-  <div class="alert-text">
-    지금 막힌 항목 / 미결 게이트<br>
-    <span>${lines.join('<br>')}</span>
-  </div>
-</div>`;
-}
-
-// ── Decision Gates ───────────────────────────
-function renderGates() {
-  return `
-<div class="card">
-  <div class="card-hdr"><span class="card-hdr-icon">▲</span>의사결정 게이트 (Decision Gates)</div>
-  <div class="card-body">
-    <div class="gates-grid">
-      ${GATES.map(g => {
-        const isActive = activeGate === g.id;
-        const stag = g.status === 'resolved'
-          ? `<span class="status-tag resolved">✓ ${g.resolution}</span>`
-          : `<span class="status-tag pending">⚠ 미결정</span>`;
-        const affCount = g.affects.length;
-        return `
-<button class="gate-btn${isActive?' active':''}" onclick="toggleGate('${g.id}')" aria-pressed="${isActive}">
-  <div class="gate-row">${g.icon} <span class="gate-label">${g.label}</span> ${stag}</div>
-  <div class="gate-note">${g.note}</div>
-  <div class="gate-affects">▸ 영향 태스크 ${affCount}개 클릭하면 하이라이트${isActive?' (활성)':''}</div>
-</button>`;
-      }).join('')}
-    </div>
-  </div>
-</div>`;
-}
-
-// ── Phase Timeline ───────────────────────────
-function renderTimeline() {
-  const TL_START = new Date('2026-04-01');
-  const TL_END   = new Date('2026-09-30');
-  const total = daysBetween(TL_START, TL_END);
-  const pct  = (str) => (daysBetween(TL_START, new Date(str)) / total * 100).toFixed(2) + '%';
-  const pctN = (str) => daysBetween(TL_START, new Date(str)) / total * 100;
-
-  const PHASE_COLOR = { done:'#15803D', 'in-progress':'#1D4ED8', waiting:'#D1D5DB' };
-
-  const segments = PHASES.map(p => {
-    const l = pctN(p.start); const r = pctN(p.due);
-    const w = r - l;
-    const c = PHASE_COLOR[p.status];
-    const op = p.status === 'waiting' ? 0.4 : 0.85;
-    return `<div class="tl-segment" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${c};opacity:${op}"></div>`;
-  }).join('');
-
-  const todayL = pctN(TODAY_STR);
-  const todayEl = `
-    <div class="tl-today" style="left:${todayL.toFixed(2)}%;top:-18px;height:44px">
-      <div class="tl-today-tip">TODAY</div>
-    </div>`;
-
-  const markers = PHASES.map(p => {
-    const l = pctN(p.due);
-    const c = PHASE_COLOR[p.status];
-    return `
-<div class="tl-marker" style="left:${l.toFixed(2)}%;top:-2px">
-  <div class="tl-marker-id" style="color:${c}">${p.id}</div>
-  <div class="tl-marker-dot" style="background:${c}"></div>
-  <div class="tl-marker-date">${fmtDate(p.due)}</div>
-</div>`;
-  }).join('');
-
-  const rulerLabels = ['4/1','5/1','6/1','7/1','8/1','9/1','9/30'];
-
-  const phaseCards = PHASES.map(p => {
-    const rem = daysLeft(p.due);
-    const isCur = p.status === 'in-progress';
-    const isDone = p.status === 'done';
-    const c = PHASE_COLOR[p.status];
-    const dueLabel = isDone ? `완료 (${fmtDate(p.due)})` : isCur ? `${fmtDate(p.due)} 마감 · ${rem}일 후` : `목표 ${fmtDate(p.due)}`;
-    const cls = isDone ? 'done-phase' : isCur ? 'current' : '';
-    return `
-<div class="phase-card ${cls}">
-  <div class="pc-id" style="color:${c}">${p.id}</div>
-  <div class="pc-name">${p.label}</div>
-  <div class="pc-sub">${p.sub}${p.note ? ' · '+p.note : ''}</div>
-  <div class="pc-due${isCur&&rem<=7?' urgent':''}">${dueLabel}</div>
-  <div class="prog-wrap"><div class="prog-fill" style="width:${p.progress}%;background:${c}"></div></div>
-  <div class="prog-pct" style="color:${c}">${p.progress}%</div>
-</div>`;
-  }).join('');
-
-  return `
-<div class="card">
-  <div class="card-hdr"><span class="card-hdr-icon">▶</span>Phase 타임라인</div>
-  <div class="card-body">
-    <div class="tl-outer">
-      <div class="tl-track-wrap">
-        <div class="tl-track">
-          ${segments}
-          ${todayEl}
-          ${markers}
-        </div>
-      </div>
-      <div class="tl-ruler">
-        ${rulerLabels.map(l=>`<span>${l}</span>`).join('')}
-      </div>
-    </div>
-    <div class="phase-cards">${phaseCards}</div>
-  </div>
-</div>`;
-}
-
-// ── Swim Lanes ───────────────────────────────
-function renderSwimLanes() {
-  const byVendor = {};
-  VENDORS.forEach(v => { byVendor[v.id] = []; });
-  const unassigned = { D1:[], D2:[] };
-
-  TASKS.forEach(t => {
-    if (t.owner && byVendor[t.owner]) byVendor[t.owner].push(t);
-    else if (!t.owner && unassigned[t.phase]) unassigned[t.phase].push(t);
+function getLog(){try{return JSON.parse(lg('ob_log')||'[]')}catch(e){return[]}}
+function getFiltered(){
+  const f=S.filters;
+  return TASKS.filter(t=>{
+    const s=getSt(t);
+    if(f.status!=='all'&&s!==f.status)return false;
+    if(f.vendor!=='all'){if(f.vendor==='unassigned'&&t.owner!==null)return false;if(f.vendor!=='unassigned'&&t.owner!==f.vendor)return false;}
+    if(f.phase!=='all'&&t.phase!==f.phase)return false;
+    return true;
   });
+}
 
-  const d1v = VENDORS.filter(v => v.phases.includes('D1'));
-  const d2v = VENDORS.filter(v => v.phases.includes('D2'));
+// ── HELPERS ──
+const dBetween=(a,b)=>Math.round((b-a)/86400000);
+const dLeft=(d)=>dBetween(TODAY,new Date(d));
+const fmtD=(s)=>{const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`};
+function fmtAgo(ts){if(!ts)return'';const m=Math.floor((Date.now()-Number(ts))/60000);if(m<1)return'방금';if(m<60)return`${m}분 전`;if(m<1440)return`${Math.floor(m/60)}h 전`;return`${Math.floor(m/1440)}d 전`}
+const SL={done:'완료','in-progress':'진행',waiting:'대기',blocked:'막힘'};
+const SI={done:'✓','in-progress':'↻',waiting:'○',blocked:'✕'};
+const SC={done:'done','in-progress':'in-progress',waiting:'waiting',blocked:'blocked'};
+function chip(s){return`<span class="sc ${SC[s]}" role="img" aria-label="${SL[s]}"><span aria-hidden="true">${SI[s]}</span> ${SL[s]}</span>`}
+const PCOL={done:'#15803D','in-progress':'#1D4ED8',waiting:'#D1D5DB'};
+const SCOL={done:'#15803D','in-progress':'#1D4ED8',waiting:'#9CA3AF',blocked:'#DC2626'};
+function trend(p){
+  if(p.status==='done')return'✓';if(p.status==='waiting')return'—';
+  const el=dBetween(new Date(p.start),TODAY)/dBetween(new Date(p.start),new Date(p.due))*100;
+  const d=p.progress-el;return d>=5?'↑':d<=-15?'↓':'→';
+}
+function trendColor(v){return v==='↑'?'#15803D':v==='↓'?'#DC2626':'#6B7280'}
 
-  const sections = [
-    { phase:'D1', label:'D1 — 시작품 2nd (~6/30)', vendors:d1v },
-    { phase:'D2', label:'D2 — 시제품 1st (~8/30)', vendors:d2v }
-  ];
+// ── RENDER ──
+function render(){
+  document.getElementById('app').innerHTML=[
+    rHdr(),rKPI(),rFB(),rAlert(),rGates(),rTL(),rContent(),rLog(),rLegend()
+  ].join('');
+  document.querySelectorAll('.ni').forEach(el=>{
+    el.addEventListener('blur',()=>{try{localStorage.setItem('ob_n_'+el.dataset.tid,el.value)}catch(e){}});
+  });
+}
 
-  return `
-<div class="card">
-  <div class="card-hdr"><span class="card-hdr-icon">◈</span>벤더 Swim Lane</div>
-  ${sections.map(sec => `
-    <div class="phase-group-label">${sec.label}</div>
-    ${sec.vendors.map(v => renderLane(v, byVendor[v.id])).join('')}
-    ${renderUnassigned(unassigned[sec.phase], sec.phase + ' 기타 태스크')}
-  `).join('')}
+function rHdr(){
+  const rem=dLeft('2026-06-30');
+  return`<div class="hdr"><div class="hdr-bar"></div><div><div class="hdr-title">OBJET 개발 컨트롤타워</div><div class="hdr-sub">Surearly · 미희님 (SuGenTech) · 6개 외주처 모니터링</div></div><div class="hdr-r"><div class="today-pill">TODAY&nbsp;&nbsp;2026.06.23</div><div class="d1w">⚠ D1 마감 ${rem}일 전</div></div></div>`;
+}
+
+function rKPI(){
+  const all=TASKS, st=all.map(t=>getSt(t));
+  const doneN=st.filter(s=>s==='done').length;
+  const progN=st.filter(s=>s==='in-progress').length;
+  const blkN=st.filter(s=>s==='blocked').length;
+  const d1=all.filter(t=>t.phase==='D1');
+  const d1d=d1.filter(t=>getSt(t)==='done').length;
+  const rem=dLeft('2026-06-30');
+  return`<div class="kpi">
+<div class="kc ${blkN>0?'red':'grn'}"><div class="kc-lbl">블로커</div><div class="kc-val">${blkN}</div><div class="kc-sub">즉시 조치 필요</div></div>
+<div class="kc blu"><div class="kc-lbl">D1 완료율</div><div class="kc-val">${Math.round(d1d/d1.length*100)}%</div><div class="kc-sub">${d1d}/${d1.length} 태스크</div></div>
+<div class="kc blu"><div class="kc-lbl">진행중</div><div class="kc-val">${progN}</div><div class="kc-sub">활성 태스크</div></div>
+<div class="kc ${rem<=7?'red':'grn'}"><div class="kc-lbl">D1 마감까지</div><div class="kc-val">D-${rem}</div><div class="kc-sub">6/30 기준</div></div>
 </div>`;
 }
 
-function renderLane(vendor, tasks) {
-  if (!tasks || tasks.length === 0) return '';
-  const taskStatuses = tasks.map(t => getStatus(t));
-  const blockedN = taskStatuses.filter(s => s === 'blocked').length;
-  const doneN    = taskStatuses.filter(s => s === 'done').length;
-  return `
-<div class="swim-lane">
-  <div class="lane-hdr">
-    <div class="vendor-dot" style="background:${vendor.color}"></div>
-    <div class="vendor-name">${vendor.name}</div>
-    ${vendor.phases.map(p=>`<span class="phase-pip">${p}</span>`).join('')}
-    ${blockedN > 0 ? `<span class="blocker-warn">⛔ 막힘 ${blockedN}</span>` : ''}
-    <span class="task-count">${doneN}/${tasks.length}</span>
-  </div>
-  <div class="lane-body">${tasks.map(t => renderTaskCard(t)).join('')}</div>
+function rFB(){
+  const f=S.filters;
+  const hasF=f.status!=='all'||f.vendor!=='all'||f.phase!=='all';
+  const sOpts=[{v:'all',l:'전체'},{v:'done',l:'완료'},{v:'in-progress',l:'진행'},{v:'waiting',l:'대기'},{v:'blocked',l:'막힘'}];
+  const pOpts=[{v:'all',l:'전체'},{v:'D1',l:'D1'},{v:'D2',l:'D2'}];
+  const vOpts=[{v:'all',l:'전체'},...VENDORS.map(v=>({v:v.id,l:v.name})),{v:'unassigned',l:'미배정'}];
+  const views=[{v:'swim',l:'🗂 스윔레인'},{v:'gantt',l:'📊 간트'},{v:'list',l:'📋 목록'}];
+  return`<div class="fb">
+<div class="fg"><span class="fl">상태</span>${sOpts.map(o=>`<button class="fc${f.status===o.v?' on':''}" onclick="setF('status','${o.v}')">${o.l}</button>`).join('')}</div>
+<div class="fsep"></div>
+<div class="fg"><span class="fl">Phase</span>${pOpts.map(o=>`<button class="fc${f.phase===o.v?' on':''}" onclick="setF('phase','${o.v}')">${o.l}</button>`).join('')}</div>
+<div class="fsep"></div>
+<div class="fg"><span class="fl">벤더</span>${vOpts.map(o=>`<button class="fc${f.vendor===o.v?' on':''}" onclick="setF('vendor','${o.v}')">${o.l}</button>`).join('')}</div>
+${hasF?`<button class="clr" onclick="clrF()">✕ 초기화</button>`:''}
+<div class="vg">${views.map(o=>`<button class="vb${S.view===o.v?' on':''}" onclick="setV('${o.v}')">${o.l}</button>`).join('')}</div>
 </div>`;
 }
 
-function renderUnassigned(tasks, title) {
-  if (!tasks || tasks.length === 0) return '';
-  return `
-<div class="unassigned-wrap">
-  <div class="unassigned-label">${title}</div>
-  <div class="unassigned-tasks">${tasks.map(t => renderTaskCard(t)).join('')}</div>
+function rAlert(){
+  const bl=TASKS.filter(t=>getSt(t)==='blocked');
+  const pg=GATES.filter(g=>g.status==='pending');
+  if(!bl.length&&!pg.length)return'';
+  const lines=[...bl.map(t=>`<b>${t.label}</b>${t.blocker?' — '+t.blocker:''}`),
+               ...pg.map(g=>`<b>미결 게이트: ${g.label}</b> — ${g.note}`)];
+  return`<div class="alert"><span style="font-size:15px;flex-shrink:0">🚨</span><div class="al-txt">지금 막힌 항목 / 미결 게이트<br><span>${lines.join('<br>')}</span></div></div>`;
+}
+
+function rGates(){
+  return`<div class="card"><div class="ch"><span>▲</span>의사결정 게이트</div><div class="cb"><div class="gg">
+${GATES.map(g=>{
+  const on=S.activeGate===g.id;
+  const stag=g.status==='resolved'?`<span class="stag ok">✓ ${g.resolution}</span>`:`<span class="stag pend">⚠ 미결정</span>`;
+  return`<button class="gb${on?' on':''}" onclick="togG('${g.id}')" aria-pressed="${on}"><div class="gr">${g.icon} <span class="gl">${g.label}</span>${stag}</div><div class="gn">${g.note}</div><div class="ga">▸ 영향 태스크 ${g.affects.length}개${on?' — 하이라이트 ON':' — 클릭하면 하이라이트'}</div></button>`;
+}).join('')}
+</div></div></div>`;
+}
+
+function rTL(){
+  const S0=new Date('2026-04-01'),E0=new Date('2026-09-30');
+  const tot=dBetween(S0,E0);
+  const pN=s=>dBetween(S0,new Date(s))/tot*100;
+  const segs=PHASES.map(p=>{const l=pN(p.start),w=pN(p.due)-l,c=PCOL[p.status],op=p.status==='waiting'?.4:.85;return`<div class="tls" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${c};opacity:${op}"></div>`;}).join('');
+  const td=pN(TODAY_STR);
+  const markers=PHASES.map(p=>{const l=pN(p.due),c=PCOL[p.status];return`<div class="tlm" style="left:${l.toFixed(2)}%;top:-2px"><div class="tlm-id" style="color:${c}">${p.id}</div><div class="tlm-dot" style="background:${c}"></div><div class="tlm-dt">${fmtD(p.due)}</div></div>`;}).join('');
+  const cards=PHASES.map(p=>{
+    const rem=dLeft(p.due),isCur=p.status==='in-progress',isDone=p.status==='done';
+    const c=PCOL[p.status],tr=trend(p),tc=trendColor(tr);
+    const dLbl=isDone?`완료 (${fmtD(p.due)})`:isCur?`${fmtD(p.due)} 마감 · ${rem}일 후`:`목표 ${fmtD(p.due)}`;
+    return`<div class="pc${isCur?' cur':''}">
+${!isDone?`<div class="ra" style="color:${tc}" title="추세">${tr}</div>`:''}
+<div class="pc-id" style="color:${c}">${p.id}</div>
+<div class="pc-nm">${p.label}</div>
+<div class="pc-sb">${p.sub}${p.note?' · '+p.note:''}</div>
+<div class="pc-due${isCur&&rem<=7?' urg':''}">${dLbl}</div>
+<div class="pw"><div class="pf" style="width:${p.progress}%;background:${c}"></div></div>
+<div class="pp" style="color:${c}">${p.progress}%</div>
+</div>`;
+  }).join('');
+  return`<div class="card"><div class="ch"><span>▶</span>Phase 타임라인</div><div class="cb">
+<div class="tl"><div class="tlw"><div class="tlt">${segs}<div class="tld" style="left:${td.toFixed(2)}%;top:-18px;height:44px"><div class="tld-tip">TODAY</div></div>${markers}</div></div>
+<div class="tlr">${['4/1','5/1','6/1','7/1','8/1','9/1','9/30'].map(l=>`<span>${l}</span>`).join('')}</div>
+</div><div class="pcs">${cards}</div></div></div>`;
+}
+
+function rContent(){
+  if(S.view==='gantt')return rGantt();
+  if(S.view==='list') return rList();
+  return rSwim();
+}
+
+function rSwim(){
+  const fids=new Set(getFiltered().map(t=>t.id));
+  const bv={};VENDORS.forEach(v=>{bv[v.id]=[];});
+  const un={D1:[],D2:[]};
+  TASKS.forEach(t=>{if(!fids.has(t.id))return;t.owner&&bv[t.owner]?bv[t.owner].push(t):un[t.phase]&&un[t.phase].push(t);});
+  const secs=[{ph:'D1',label:'D1 — 시작품 2nd (~6/30)',vs:VENDORS.filter(v=>v.phases.includes('D1'))},{ph:'D2',label:'D2 — 시제품 1st (~8/30)',vs:VENDORS.filter(v=>v.phases.includes('D2'))}];
+  const pf=S.filters.phase;
+  return`<div class="card"><div class="ch"><span>◈</span>벤더 Swim Lane</div>
+${secs.filter(s=>pf==='all'||pf===s.ph).map(sec=>`
+<div class="pgl">${sec.label}</div>
+${sec.vs.map(v=>{
+  const ts=bv[v.id]||[];
+  const bl=ts.filter(t=>getSt(t)==='blocked').length;
+  const dn=ts.filter(t=>getSt(t)==='done').length;
+  if(!ts.length)return`<div class="sl"><div class="lh"><div class="vd" style="background:${v.color}"></div><div class="vn">${v.name}</div><span class="tc2" style="margin-left:auto">필터 없음</span></div></div>`;
+  return`<div class="sl"><div class="lh"><div class="vd" style="background:${v.color}"></div><div class="vn">${v.name}</div>${v.phases.map(p=>`<span class="pp2">${p}</span>`).join('')}${bl?`<span class="bw">⛔ ${bl}</span>`:''}<span class="tc2">${dn}/${ts.length}</span></div><div class="lb">${ts.map(rTK).join('')}</div></div>`;
+}).join('')}
+${(()=>{const ts=un[sec.ph];if(!ts||!ts.length)return'';return`<div class="uw"><div class="ul">${sec.ph} 기타 태스크</div><div class="ut">${ts.map(rTK).join('')}</div></div>`;})()}
+`).join('')}
 </div>`;
 }
 
-function renderTaskCard(task) {
-  const eff = getStatus(task);
-  const isHl = activeGate && GATES.find(g=>g.id===activeGate)?.affects.includes(task.id);
-  const gateData = task.gate ? GATES.find(g=>g.id===task.gate) : null;
-  const blockerText = task.blocker || null;
-
-  // next status cycle for toggle
-  const cycle = { done:'in-progress', 'in-progress':'waiting', waiting:'blocked', blocked:'done' };
-  const nextS = cycle[eff];
-
-  return `
-<div class="task-card s-${eff}${isHl?' hl':''}" id="tc-${task.id}">
-  <div class="tc-top">
-    ${sc(eff)}
-    ${task.qty ? `<span class="sc-qty">${task.qty}</span>` : ''}
-    <button class="toggle-btn" onclick="cycleStatus('${task.id}')" title="상태 변경 → ${STATUS_LABEL[nextS]}">⇄</button>
-  </div>
-  <div class="tc-label">${task.label}</div>
-  <div class="tc-phase">${task.phase}</div>
-  ${blockerText && eff !== 'done' ? `<div class="blocker-badge"><span aria-hidden="true">⛔</span><span>${blockerText}</span></div>` : ''}
-  ${gateData ? `<div class="gate-badge">🔀 ${gateData.label}</div>` : ''}
+function rTK(task){
+  const eff=getSt(task);
+  const hl=S.activeGate&&GATES.find(g=>g.id===S.activeGate)?.affects.includes(task.id);
+  const gd=task.gate?GATES.find(g=>g.id===task.gate):null;
+  const no=S.noteOpen===task.id;
+  const nt=getNote(task.id);
+  const upd=getUpd(task.id);
+  const icp=CP.has(task.id);
+  const nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'}[eff];
+  return`<div class="tk s-${eff}${hl?' hl':''}${icp?' cp':''}" id="tc-${task.id}">
+<div class="tk-top">${chip(eff)}${task.qty?`<span class="sc-qty">${task.qty}</span>`:''}<div class="tka"><button class="ib" onclick="togN('${task.id}')" title="메모">✏</button><button class="ib" onclick="cycS('${task.id}')" title="→ ${SL[nxt]}">⇄</button></div></div>
+<div class="tk-lbl">${task.label}</div>
+<div class="tk-meta"><span class="tk-ph">${task.phase}</span>${icp?`<span class="tk-cp">★ 크리티컬</span>`:''}${upd?`<span class="tk-upd">${fmtAgo(upd)}</span>`:''}</div>
+${task.blocker&&eff!=='done'?`<div class="blk"><span aria-hidden="true">⛔</span><span>${task.blocker}</span></div>`:''}
+${gd?`<div class="gba">🔀 ${gd.label}</div>`:''}
+${no||nt?`<div class="na"><div class="nl">메모</div>${no?`<textarea class="ni" data-tid="${task.id}">${nt}</textarea><button class="ns" onclick="svN('${task.id}')">저장</button>`:`<div class="nd" onclick="togN('${task.id}')">${nt||'메모 추가...'}</div>`}</div>`:''}
 </div>`;
 }
 
-// ── Legend ───────────────────────────────────
-function renderLegend() {
-  return `
-<div class="card">
-  <div class="legend">
-    <div class="leg-item">${sc('done')}</div>
-    <div class="leg-item">${sc('in-progress')}</div>
-    <div class="leg-item">${sc('waiting')}</div>
-    <div class="leg-item">${sc('blocked')}</div>
-    <div class="leg-item" style="font-size:9px;color:var(--text-3);margin-left:4px">⇄ 카드 우상단 버튼으로 상태 토글 (localStorage 저장)</div>
-    <div class="leg-note">색 + 아이콘 병행 · WCAG AA</div>
-  </div>
+function rGantt(){
+  const S0=new Date('2026-04-01'),E0=new Date('2026-09-30');
+  const tot=dBetween(S0,E0);
+  const pN=s=>Math.max(0,Math.min(100,dBetween(S0,new Date(s))/tot*100));
+  const td=pN(TODAY_STR);
+  const fids=new Set(getFiltered().map(t=>t.id));
+  const pf=S.filters.phase;
+  const months=['4월','5월','6월','7월','8월','9월'];
+  let rows='';
+  ['D1','D2'].forEach(ph=>{
+    if(pf!=='all'&&pf!==ph)return;
+    const pts=TASKS.filter(t=>t.phase===ph&&fids.has(t.id));
+    if(!pts.length)return;
+    rows+=`<div class="g-row g-sep"><div class="g-lbl" style="width:200px"><span style="font-size:10px;font-weight:800;color:var(--text3);letter-spacing:.06em;padding-left:4px">${ph}</span></div><div class="g-trk"><div class="g-td" style="left:${td.toFixed(2)}%"></div></div></div>`;
+    pts.forEach(t=>{
+      const eff=getSt(t);
+      const l=pN(t.est.s),w=Math.max(0.5,pN(t.est.e)-l);
+      const v=t.owner?VENDORS.find(x=>x.id===t.owner):null;
+      const icp=CP.has(t.id);
+      rows+=`<div class="g-row">
+<div class="g-lbl" style="width:200px"><div class="vd" style="background:${v?v.color:'var(--border)'}"></div>${chip(eff)}<div class="g-lt" title="${t.label}">${t.label}</div></div>
+<div class="g-trk"><div class="g-td" style="left:${td.toFixed(2)}%"></div><div class="g-bar" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${SCOL[eff]};${icp?'outline:1.5px solid #F59E0B;outline-offset:1px':''}" title="${t.label} (${fmtD(t.est.s)}~${fmtD(t.est.e)})">${w>8?t.label.slice(0,10):''}</div></div>
+</div>`;
+    });
+  });
+  return`<div class="card"><div class="ch"><span>📊</span>간트 차트 <span style="font-size:9px;color:var(--text3);font-weight:400;margin-left:4px">예상 일정 · ★ 크리티컬 패스</span></div>
+<div class="gw"><div class="g-hdr">${months.map(m=>`<div class="g-mo">${m}</div>`).join('')}</div>${rows}</div></div>`;
+}
+
+function rList(){
+  const filtered=getFiltered();
+  const ord={blocked:0,'in-progress':1,waiting:2,done:3};
+  const sorted=[...filtered].sort((a,b)=>(ord[getSt(a)]??9)-(ord[getSt(b)]??9)||a.phase.localeCompare(b.phase));
+  if(!sorted.length)return`<div class="card"><div class="cb" style="text-align:center;color:var(--text3);padding:24px">해당 조건의 태스크가 없습니다.</div></div>`;
+  const nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'};
+  const rows=sorted.map(t=>{
+    const eff=getSt(t);const v=t.owner?VENDORS.find(x=>x.id===t.owner):null;const gd=t.gate?GATES.find(g=>g.id===t.gate):null;const nt=getNote(t.id);const icp=CP.has(t.id);const upd=getUpd(t.id);
+    return`<tr class="${eff==='blocked'?'s-b':eff==='in-progress'?'s-p':''}">
+<td><span style="font-family:var(--mono);font-size:10px">${t.phase}</span></td>
+<td>${chip(eff)}</td>
+<td>${v?`<span style="display:inline-flex;align-items:center;gap:4px"><span class="vd" style="background:${v.color}"></span>${v.name}</span>`:`<span style="color:var(--text3)">미배정</span>`}</td>
+<td><span style="font-weight:500">${t.label}</span>${icp?`<span class="tk-cp" style="margin-left:5px">★</span>`:''}${t.qty?`<span class="sc-qty" style="margin-left:4px">${t.qty}</span>`:''}${t.blocker&&eff!=='done'?`<div style="font-size:10px;color:#7F1D1D;margin-top:2px">⛔ ${t.blocker}</div>`:''}${gd?`<div class="gba" style="margin-top:3px">🔀 ${gd.label}</div>`:''}${nt?`<div style="font-size:10px;color:var(--text2);margin-top:2px">✏ ${nt}</div>`:''}</td>
+<td><span style="font-size:9px;font-family:var(--mono);color:var(--text3)">${fmtD(t.est.s)}–${fmtD(t.est.e)}</span>${upd?`<br><span style="font-size:9px;font-family:var(--mono);color:var(--text3)">${fmtAgo(upd)}</span>`:''}</td>
+<td><button class="ib" onclick="cycS('${t.id}')" title="→ ${SL[nxt[eff]]}">⇄</button><button class="ib" onclick="togN('${t.id}')" title="메모">✏</button></td>
+</tr>`;
+  }).join('');
+  return`<div class="card"><div class="ch"><span>📋</span>목록 뷰 — ${sorted.length}개</div>
+<div style="overflow-x:auto;padding:14px"><table class="ltb"><thead><tr><th>Phase</th><th>상태</th><th>벤더</th><th>태스크</th><th>기간</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
+function rLog(){
+  const log=getLog(),cnt=log.length;
+  return`<div style="margin-bottom:10px">
+<button class="at-btn" onclick="togLog()"><span>🕐</span> 변경 이력<span class="at-cnt">${cnt}건</span><span style="margin-left:4px">${S.showLog?'▲':'▼'}</span></button>
+${S.showLog?`<div class="al-box">${!cnt?`<div class="ai" style="color:var(--text3);font-style:italic">이력 없음. ⇄ 버튼으로 상태 변경 시 기록됩니다.</div>`:log.map(e=>`<div class="ai"><span class="ai-t">${fmtAgo(e.ts)}</span><span style="flex:1">${e.lbl}</span><span class="ai-f">${SL[e.from]||e.from}</span><span style="color:var(--text3);margin:0 3px">→</span><span class="ai-to ${SC[e.to]||''}">${SL[e.to]||e.to}</span></div>`).join('')}</div>`:''}
 </div>`;
 }
 
-// ════════════════════════════════════════════
-// EVENTS
-// ════════════════════════════════════════════
-function bind() { /* inline onclick 사용 */ }
+function rLegend(){
+  return`<div class="card"><div class="lgd">
+${['done','in-progress','waiting','blocked'].map(s=>`<div class="li">${chip(s)}</div>`).join('')}
+<div class="li" style="color:#D97706">★ 크리티컬 패스</div>
+<div class="li" style="color:var(--text3)">↑→↓ 추세 · ⇄ 상태 토글 · ✏ 메모 · localStorage 저장</div>
+<div style="margin-left:auto;font-size:10px;color:var(--text3)">색+아이콘 병행 · WCAG AA</div>
+</div></div>`;
+}
 
-function toggleGate(id) {
-  activeGate = (activeGate === id) ? null : id;
+// ── EVENTS ──
+function togG(id){S.activeGate=(S.activeGate===id?null:id);render()}
+function cycS(tid){
+  const t=TASKS.find(x=>x.id===tid);if(!t)return;
+  const cur=getSt(t),nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'}[cur]||'waiting';
+  logAct(tid,cur,nxt);try{localStorage.setItem('ob_s_'+tid,nxt);localStorage.setItem('ob_u_'+tid,Date.now())}catch(e){}
   render();
 }
+function togN(tid){S.noteOpen=(S.noteOpen===tid?null:tid);render();if(S.noteOpen)setTimeout(()=>{const el=document.querySelector(`.ni[data-tid="${tid}"]`);if(el)el.focus()},50)}
+function svN(tid){const el=document.querySelector(`.ni[data-tid="${tid}"]`);if(el)try{localStorage.setItem('ob_n_'+tid,el.value)}catch(e){}; S.noteOpen=null;render()}
+function setF(k,v){S.filters[k]=v;render()}
+function clrF(){S.filters={status:'all',vendor:'all',phase:'all'};render()}
+function setV(v){S.view=v;render()}
+function togLog(){S.showLog=!S.showLog;render()}
 
-function cycleStatus(taskId) {
-  const task = TASKS.find(t => t.id === taskId);
-  if (!task) return;
-  const cycle = { done:'in-progress', 'in-progress':'waiting', waiting:'blocked', blocked:'done' };
-  const cur = getStatus(task);
-  const next = cycle[cur] || 'waiting';
-  saveStatus(taskId, next);
-  render();
-}
-
-// ════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════
 render();
 </script>
 </body>
