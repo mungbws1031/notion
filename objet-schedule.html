@@ -2,515 +2,456 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OBJET 개발 컨트롤타워</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Surearly Objet 개발 일정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --su-red:#E60044;--su-red-l:#FFF0F5;--bg:#F3F4F6;--surface:#fff;
-  --border:#E4E6EA;--border-s:#CBD0D8;--text1:#111827;--text2:#4B5563;--text3:#9CA3AF;
-  --done-c:#15803D;--done-bg:#DCFCE7;--prog-c:#1D4ED8;--prog-bg:#DBEAFE;
-  --wait-c:#6B7280;--wait-bg:#F3F4F6;--blk-c:#DC2626;--blk-bg:#FEE2E2;
-  --gate-c:#92400E;--gate-bg:#FEF3C7;
-  --r:10px;--rs:6px;
-  --mono:'Space Mono','Courier New',monospace;
-  --sans:'Pretendard Variable','Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  --sh:0 1px 4px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-button{font-family:inherit;cursor:pointer}
-body{font-family:var(--sans);background:var(--bg);color:var(--text1);font-size:13px;line-height:1.5;padding:14px;max-width:980px;margin:0 auto}
+  :root{
+    --su-red:#E60044;
+    --su-red-soft:#F4A0BB;
+    --su-red-wash:#FCEFF3;
+    --su-gray:#8A8987;
+    --su-gray-soft:#C9C8C6;
+    --ink:#1E202C;
+    --ink-2:#4A4C58;
+    --ink-3:#828490;
+    --line:#EAE8E4;
+    --line-2:#F1F0EC;
+    --paper:#FAFAF7;
+    --sans:'Nunito',-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    --mono:'Space Mono','SFMono-Regular',Menlo,monospace;
+    --gutter:132px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:auto;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    padding:20px 18px 28px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px;margin:0 auto;}
 
-/* Header */
-.hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px}
-.hdr-bar{width:5px;height:36px;background:var(--su-red);border-radius:3px;flex-shrink:0}
-.hdr-title{font-size:15px;font-weight:800;letter-spacing:-.02em}
-.hdr-sub{font-size:11px;color:var(--text2)}
-.hdr-r{margin-left:auto;text-align:right}
-.today-pill{display:inline-flex;align-items:center;gap:5px;background:var(--su-red);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;font-family:var(--mono)}
-.d1w{margin-top:4px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--su-red);background:var(--su-red-l);padding:2px 8px;border-radius:10px;display:inline-block}
+  /* ---- Notion embed responsive ---- */
+  @media (max-width:820px){
+    :root{--gutter:104px;}
+    body{padding:14px 12px 22px;}
+    h1{font-size:22px;}
+    .kpis{gap:16px;}
+    .kpi .v{font-size:19px;}
+    .panel{padding:18px 16px 22px;border-radius:12px;}
+    .glabel .n,.row{font-size:13px;}
+  }
 
-/* KPI */
-.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-.kc{background:var(--surface);border-radius:var(--rs);box-shadow:var(--sh);padding:12px 14px}
-.kc-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.kc-val{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1;margin-bottom:2px}
-.kc-sub{font-size:10px;color:var(--text2)}
-.kc.red .kc-val{color:var(--su-red)}
-.kc.grn .kc-val{color:var(--done-c)}
-.kc.blu .kc-val{color:var(--prog-c)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--su-red);font-weight:700;margin:0 0 8px;}
+  h1{font-size:28px;font-weight:900;margin:0 0 8px;letter-spacing:-0.025em;line-height:1.1;}
+  .sub{font-size:13.5px;color:var(--ink-2);font-weight:600;}
+  .sub .mono{font-family:var(--mono);font-weight:400;font-size:12.5px;}
 
-/* Filter bar */
-.fb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 14px;background:var(--surface);border-radius:var(--rs);box-shadow:var(--sh);margin-bottom:10px}
-.fg{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.fl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
-.fc{background:none;border:1.5px solid var(--border);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--text2);transition:all .12s}
-.fc:hover{border-color:var(--su-red);color:var(--su-red)}
-.fc.on{background:var(--su-red);border-color:var(--su-red);color:#fff}
-.fsep{width:1px;height:18px;background:var(--border);margin:0 2px}
-.vg{margin-left:auto;display:flex;gap:4px}
-.vb{background:none;border:1.5px solid var(--border);border-radius:var(--rs);padding:4px 10px;font-size:11px;font-weight:600;color:var(--text2);transition:all .12s}
-.vb:hover{border-color:var(--su-red);color:var(--su-red)}
-.vb.on{background:var(--text1);border-color:var(--text1);color:#fff}
-.clr{font-size:10px;color:var(--text3);border:none;background:none;padding:2px 6px;border-radius:8px}
-.clr:hover{background:var(--border)}
+  /* KPI */
+  .kpis{display:flex;gap:26px;margin:22px 0 30px;flex-wrap:wrap;}
+  .kpi{display:flex;flex-direction:column;gap:3px;}
+  .kpi .v{font-family:var(--mono);font-size:23px;font-weight:700;line-height:1;color:var(--ink);}
+  .kpi .v .u{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink-3);margin-left:2px;}
+  .kpi.accent .v{color:var(--su-red);}
+  .kpi .l{font-size:11.5px;font-weight:700;color:var(--ink-3);}
+  .kpi .sep{width:1px;align-self:stretch;background:var(--line);}
 
-/* Alert */
-.alert{background:var(--su-red-l);border:1.5px solid var(--su-red);border-radius:var(--rs);padding:9px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px}
-.al-txt{font-size:12px;font-weight:600;color:var(--su-red);line-height:1.5}
-.al-txt span{font-weight:400;color:#7F1D1D}
+  /* card */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 28px 30px;}
 
-/* Card */
-.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden}
-.ch{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
-.cb{padding:14px}
+  /* axis */
+  .chart{position:relative;min-width:640px;}
+  .chart-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .axis{display:grid;grid-template-columns:var(--gutter) 1fr;margin-bottom:6px;}
+  .axis .plot{position:relative;height:22px;}
+  .axis .mo{position:absolute;top:0;font-family:var(--mono);font-size:11px;font-weight:700;
+    color:var(--ink-3);transform:translateX(-2px);}
+  .axis .mo .en{font-weight:400;font-size:9px;margin-left:3px;}
 
-/* Gates */
-.gg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gb{width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:11px 13px;transition:border-color .12s,box-shadow .12s,background .12s}
-.gb:hover{border-color:var(--su-red);box-shadow:0 0 0 2px rgba(230,0,68,.1)}
-.gb.on{border-color:var(--su-red);background:var(--su-red-l);box-shadow:0 0 0 3px rgba(230,0,68,.12)}
-.gr{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap}
-.gl{font-size:13px;font-weight:700}
-.stag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
-.stag.ok{background:var(--done-bg);color:var(--done-c)}
-.stag.pend{background:var(--gate-bg);color:var(--gate-c)}
-.gn{font-size:11px;color:var(--text2);line-height:1.4}
-.ga{font-size:10px;color:var(--su-red);font-weight:600;margin-top:6px}
+  .plotwrap{display:grid;grid-template-columns:var(--gutter) 1fr;}
+  .gutter{display:flex;flex-direction:column;}
+  .plot{position:relative;}
 
-/* Timeline */
-.tl{padding:4px 0 8px}
-.tlw{position:relative;height:48px;margin:0 0 6px}
-.tlt{position:absolute;top:24px;left:0;right:0;height:8px;background:var(--border);border-radius:4px;overflow:visible}
-.tls{position:absolute;height:100%;border-radius:4px;top:0}
-.tld{position:absolute;top:-18px;width:2px;background:var(--su-red);border-radius:1px;z-index:10}
-.tld-tip{position:absolute;top:-18px;transform:translateX(-50%);background:var(--su-red);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
-.tlm{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
-.tlm-id{font-size:9px;font-family:var(--mono);font-weight:700;white-space:nowrap}
-.tlm-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;z-index:5;margin:1px 0}
-.tlm-dt{font-family:var(--mono);font-size:8px;color:var(--text3)}
-.tlr{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:var(--text3)}
-.pcs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.pc{border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;position:relative}
-.pc.cur{border-color:var(--su-red);background:linear-gradient(135deg,var(--su-red-l) 0%,#fff 100%)}
-.pc-id{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.04em}
-.pc-nm{font-size:11px;color:var(--text2);margin-bottom:1px}
-.pc-sb{font-size:10px;color:var(--text3);margin-bottom:8px}
-.pc-due{font-family:var(--mono);font-size:10px;margin-bottom:8px}
-.pc-due.urg{color:var(--su-red);font-weight:700}
-.pw{background:var(--border);height:5px;border-radius:3px;overflow:hidden}
-.pf{height:100%;border-radius:3px}
-.pp{font-family:var(--mono);font-size:11px;font-weight:700;text-align:right;margin-top:3px}
-.ra{position:absolute;top:10px;right:10px;font-size:16px}
+  /* gridlines + focus band + today (overlay, full height) */
+  .overlay{position:absolute;inset:0;pointer-events:none;z-index:0;}
+  .gl{position:absolute;top:0;bottom:0;width:1px;background:var(--line-2);}
+  .focus{position:absolute;top:0;bottom:0;background:var(--su-red-wash);opacity:.55;border-radius:6px;}
+  .focus-tag{position:absolute;top:-19px;font-family:var(--mono);font-size:9.5px;font-weight:700;
+    color:var(--su-red);transform:translateX(-50%);white-space:nowrap;}
+  .today{position:absolute;top:0;bottom:0;width:2px;background:var(--su-red);z-index:6;}
+  .today .pin{position:absolute;top:-22px;left:1px;transform:translateX(-50%);
+    font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:var(--su-red);
+    padding:2px 7px;border-radius:5px;white-space:nowrap;}
 
-/* Swim lane */
-.pgl{padding:8px 14px 4px;font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--border)}
-.pgl:first-child{border-top:none}
-.sl{border-bottom:1px solid var(--border)}
-.sl:last-child{border-bottom:none}
-.lh{display:flex;align-items:center;gap:7px;padding:7px 14px;background:#FAFAFA;border-bottom:1px solid var(--border)}
-.vd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.vn{font-weight:700;font-size:12px}
-.pp2{font-size:9px;padding:1px 5px;border-radius:8px;background:var(--border);color:var(--text3);font-family:var(--mono)}
-.bw{font-size:10px;color:var(--su-red);font-weight:700}
-.tc2{margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono)}
-.lb{padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px}
-.uw{padding:8px 14px 12px;border-top:1px dashed var(--border)}
-.ul{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-.ut{display:flex;flex-wrap:wrap;gap:8px}
+  /* rows */
+  .glabel{height:62px;display:flex;flex-direction:column;justify-content:center;gap:3px;
+    padding-right:14px;position:relative;}
+  .glabel::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:3px;}
+  .glabel.red::before{background:var(--su-red);}
+  .glabel.gray::before{background:var(--su-gray);}
+  .glabel .n{font-size:14.5px;font-weight:800;letter-spacing:-0.01em;padding-left:12px;}
+  .glabel .p{font-family:var(--mono);font-size:9px;color:var(--ink-3);padding-left:12px;}
 
-/* Task card */
-.tk{border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 10px;min-width:150px;max-width:215px;flex:1 1 150px;transition:border-color .12s,box-shadow .12s;position:relative}
-.tk.hl{border-color:var(--su-red)!important;box-shadow:0 0 0 3px rgba(230,0,68,.15)}
-.tk.s-done{border-left:3px solid var(--done-c)}
-.tk.s-in-progress{border-left:3px solid var(--prog-c)}
-.tk.s-waiting{border-left:3px solid var(--border-s)}
-.tk.s-blocked{border-left:3px solid var(--su-red)}
-.tk.cp{outline:1.5px dashed #F59E0B;outline-offset:1px}
-.tk-top{display:flex;align-items:center;gap:4px;margin-bottom:5px}
-.sc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}
-.sc.done{background:var(--done-bg);color:var(--done-c)}
-.sc.in-progress{background:var(--prog-bg);color:var(--prog-c)}
-.sc.waiting{background:var(--wait-bg);color:var(--wait-c)}
-.sc.blocked{background:var(--blk-bg);color:var(--blk-c)}
-.sc-qty{font-size:9px;font-family:var(--mono);color:var(--text3)}
-.tka{margin-left:auto;display:flex;gap:2px}
-.ib{background:none;border:none;font-size:11px;color:var(--text3);padding:1px 3px;border-radius:3px}
-.ib:hover{background:var(--border);color:var(--text2)}
-.tk-lbl{font-size:12px;font-weight:500;line-height:1.4}
-.tk-meta{display:flex;align-items:center;gap:5px;margin-top:3px}
-.tk-ph{font-size:9px;font-family:var(--mono);color:var(--text3)}
-.tk-cp{font-size:9px;color:#D97706;font-weight:700}
-.tk-upd{font-size:9px;color:var(--text3);font-family:var(--mono)}
-.blk{display:flex;align-items:flex-start;gap:4px;background:var(--blk-bg);border-radius:4px;padding:4px 6px;margin-top:6px;font-size:10px;color:#7F1D1D;line-height:1.4}
-.gba{display:inline-flex;align-items:center;gap:3px;background:var(--gate-bg);color:var(--gate-c);border-radius:4px;padding:2px 5px;font-size:9px;font-weight:700;margin-top:5px}
-.na{margin-top:7px;border-top:1px solid var(--border);padding-top:6px}
-.nl{font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
-.nd{font-size:11px;color:var(--text2);cursor:pointer}
-.nd:hover{text-decoration:underline dotted}
-.ni{width:100%;border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:11px;font-family:var(--sans);resize:vertical;min-height:44px;outline:none}
-.ni:focus{border-color:var(--su-red)}
-.ns{margin-top:4px;font-size:10px;background:var(--su-red);color:#fff;border:none;border-radius:4px;padding:3px 8px}
+  .row{height:62px;position:relative;z-index:1;}
+  .bar{position:absolute;top:50%;transform:translateY(-50%);height:22px;border-radius:11px;z-index:1;}
+  .bar.red{background:var(--su-red-wash);border:1px solid var(--su-red-soft);}
+  .bar.gray{background:#F0F0EE;border:1px solid var(--su-gray-soft);}
 
-/* Gantt */
-.gw{overflow-x:auto;padding:14px}
-.g-hdr{display:flex;margin-bottom:4px;margin-left:200px}
-.g-mo{flex:1;text-align:center;font-size:9px;font-family:var(--mono);color:var(--text3);font-weight:700;border-left:1px solid var(--border);padding:2px 0}
-.g-row{display:flex;align-items:center;min-height:30px;border-bottom:1px solid var(--border);padding:2px 0}
-.g-row:hover{background:#F9FAFB}
-.g-row.g-sep{background:#F3F4F6;border-top:2px solid var(--border);min-height:22px}
-.g-lbl{width:200px;flex-shrink:0;display:flex;align-items:center;gap:5px;padding-right:8px;overflow:hidden}
-.g-lt{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
-.g-trk{flex:1;position:relative;height:22px}
-.g-bar{position:absolute;height:16px;top:3px;border-radius:3px;display:flex;align-items:center;padding:0 5px;font-size:8px;color:#fff;font-weight:700;overflow:hidden;white-space:nowrap;min-width:4px}
-.g-td{position:absolute;top:0;bottom:0;width:2px;background:var(--su-red);z-index:5;pointer-events:none}
+  .step{position:absolute;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;
+    z-index:3;cursor:default;}
+  .step.red{background:var(--su-red);}
+  .step.gray{background:var(--su-gray);}
+  .step.overdue{box-shadow:0 0 0 3px var(--su-red-wash),0 0 0 4px var(--su-red);}
 
-/* List */
-.ltb{width:100%;border-collapse:collapse}
-.ltb th{text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:6px 10px;border-bottom:2px solid var(--border);background:#FAFAFA}
-.ltb td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
-.ltb tr:hover td{background:#F9FAFB}
-.ltb tr.s-b td:first-child{border-left:3px solid var(--su-red)}
-.ltb tr.s-p td:first-child{border-left:3px solid var(--prog-c)}
+  .ms{position:absolute;top:50%;transform:translate(-50%,-50%) rotate(45deg);
+    width:14px;height:14px;background:var(--ink);border:2px solid var(--su-red);z-index:4;border-radius:2px;}
+  .mslabel{position:absolute;bottom:calc(50% + 15px);transform:translateX(-50%);
+    text-align:center;white-space:nowrap;z-index:5;}
+  .mslabel .d{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--su-red);display:block;}
+  .mslabel .t{font-size:11px;font-weight:800;color:var(--ink);}
+  .mslabel.edge{transform:translateX(-88%);text-align:right;}
+  .mslabel.edge.l{transform:translateX(-12%);text-align:left;}
 
-/* Activity */
-.at-btn{width:100%;text-align:left;background:var(--surface);border:none;border-radius:var(--rs);padding:9px 14px;font-size:11px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px;box-shadow:var(--sh);margin-bottom:0}
-.at-btn:hover{background:#F3F4F6}
-.at-cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--text3)}
-.al-box{background:var(--surface);border-radius:0 0 var(--rs) var(--rs);border-top:1px solid var(--border);max-height:200px;overflow-y:auto;box-shadow:var(--sh);margin-bottom:10px}
-.ai{display:flex;align-items:flex-start;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border);font-size:11px}
-.ai:last-child{border-bottom:none}
-.ai-t{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:1px}
-.ai-f{text-decoration:line-through;color:var(--text3)}
-.ai-to{font-weight:700}
-.ai-to.done{color:var(--done-c)}
-.ai-to.in-progress{color:var(--prog-c)}
-.ai-to.waiting{color:var(--wait-c)}
-.ai-to.blocked{color:var(--blk-c)}
+  /* start marker label (first step gets a date under bar) */
+  .startlab{position:absolute;top:calc(50% + 16px);transform:translateX(-50%);
+    font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--ink-3);white-space:nowrap;z-index:5;}
+  .startlab.l{transform:translateX(-8%);}
 
-/* Legend */
-.lgd{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--border);background:#FAFAFA}
-.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2)}
+  /* tbd chip on the bar */
+  .tbdchip{position:absolute;top:50%;transform:translateY(-50%);height:20px;
+    display:flex;align-items:center;gap:4px;padding:0 8px;border-radius:10px;z-index:3;
+    background:#fff;border:1px dashed var(--su-red-soft);
+    font-family:var(--mono);font-size:9px;font-weight:700;color:var(--su-red);white-space:nowrap;}
 
-@media(max-width:640px){
-  .kpi{grid-template-columns:1fr 1fr}
-  .gg{grid-template-columns:1fr}
-  .pcs{grid-template-columns:1fr}
-  .vg{margin-left:0;width:100%}
-}
+  /* clickable markers */
+  .step,.ms,.mslabel,.tbdchip{cursor:pointer;}
+  .step{transition:box-shadow .12s,transform .12s;}
+  .step:hover{transform:translate(-50%,-50%) scale(1.35);}
+  .ms{transition:transform .12s;}
+  .ms:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.15);}
+  .step.sel{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--su-red)!important;transform:translate(-50%,-50%) scale(1.3);}
+  .ms.sel{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--su-red);}
+
+  /* detail panel */
+  .detail{margin-top:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    background:#fff;display:none;}
+  .detail.on{display:block;animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .detail .bar-strip{height:5px;}
+  .detail .bar-strip.red{background:var(--su-red);}
+  .detail .bar-strip.gray{background:var(--su-gray);}
+  .detail .body{padding:18px 22px 20px;}
+  .detail .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .detail .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.03em;
+    padding:3px 9px;border-radius:6px;}
+  .detail .chip.trk{background:var(--line-2);color:var(--ink-2);}
+  .detail .chip.date{background:var(--su-red-wash);color:var(--su-red);}
+  .detail .chip.ms{background:var(--ink);color:#fff;}
+  .detail .chip.ov{background:var(--su-red);color:#fff;}
+  .detail .close{margin-left:auto;border:none;background:none;cursor:pointer;color:var(--ink-3);
+    font-size:20px;line-height:1;padding:2px 6px;border-radius:6px;font-family:var(--sans);}
+  .detail .close:hover{background:var(--line-2);color:var(--ink);}
+  .detail h3{font-size:17px;font-weight:800;margin:0 0 10px;letter-spacing:-0.01em;line-height:1.35;}
+  .detail .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 20px;}
+  .detail .m{display:flex;flex-direction:column;gap:3px;}
+  .detail .m .mk{font-size:10.5px;font-weight:700;color:var(--ink-3);}
+  .detail .m .mv{font-size:13px;font-weight:700;color:var(--ink);}
+  .detail .note{margin-top:14px;padding-top:13px;border-top:1px solid var(--line-2);
+    font-size:12.5px;color:var(--ink-2);line-height:1.6;font-weight:600;}
+  .detail .note b{color:var(--su-red);}
+  .detail .hint{margin-top:12px;font-size:11px;color:var(--ink-3);font-weight:600;}
+  .detail .seq{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .detail .seq .sq{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;
+    background:var(--line-2);color:var(--ink-3);cursor:pointer;transition:background .12s;}
+  .detail .seq .sq:hover{background:var(--su-red-wash);color:var(--su-red);}
+  .detail .seq .sq.cur{background:var(--su-red);color:#fff;}
+  .detail .seq .arw{color:var(--line);font-size:10px;}
+
+  /* legend / footer */
+  .leg{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;font-size:11.5px;color:var(--ink-3);font-weight:700;}
+  .leg .i{display:flex;align-items:center;gap:8px;}
+  .leg .dia{width:12px;height:12px;background:var(--ink);border:2px solid var(--su-red);transform:rotate(45deg);border-radius:2px;flex:none;}
+  .leg .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .leg .dot.r{background:var(--su-red);}.leg .dot.g{background:var(--su-gray);}
+  .leg .ov{width:11px;height:11px;border-radius:50%;background:var(--su-red);box-shadow:0 0 0 2px var(--su-red-wash),0 0 0 3px var(--su-red);flex:none;}
+  .leg .tl{width:2px;height:14px;background:var(--su-red);flex:none;}
+
+  footer{margin-top:18px;font-size:12px;color:var(--ink-3);line-height:1.8;font-weight:600;}
+  footer .ast{color:var(--su-red);font-weight:700;}footer b{color:var(--ink-2);}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div class="wrap">
+  <p class="eyebrow">Development Timeline · v2</p>
+  <h1>Surearly Objet 개발 일정</h1>
+  <div class="sub">femtech TRF 분석기 · 6개 트랙 <span class="mono">2026.07.17 – 11.30</span></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="panel">
+    <div class="chart-scroll">
+    <div class="chart">
+      <div class="axis"><div></div><div class="plot" id="axis"></div></div>
+      <div class="plotwrap">
+        <div class="gutter" id="gutter"></div>
+        <div class="plot" id="plot">
+          <div class="overlay" id="overlay"></div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /chart-scroll -->
+
+    <div class="detail" id="detail"></div>
+
+    <div class="leg">
+      <span class="i"><span class="dia"></span> 완료 마일스톤</span>
+      <span class="i"><span class="dot r"></span><span class="dot g"></span> 단계 (클릭 시 상세)</span>
+      <span class="i"><span class="ov"></span> 기한 도래·경과</span>
+      <span class="i"><span class="tl"></span> 오늘 7/24</span>
+    </div>
+  </div>
+
+  <footer>
+    막대 위 점·다이아몬드를 클릭하면 아래에 상세가 표시됨. 원본 시트의 <b>완료일·진행 상태</b>가 전 항목 공란이라 실제 진행률은 미반영 — 계획일 기준.<br>
+    <span class="ast">*</span> 디자인 목업의 미확정 2건은 원본에 "레전드51+·52+과제"로 기재 — 오타 추정(확인 필요).
+  </footer>
+</div>
+
 <script>
-const TODAY_STR='2026-06-23', TODAY=new Date(TODAY_STR);
+const AXIS_START=new Date(2026,6,13);
+const AXIS_END=new Date(2026,11,3);
+const SPAN=AXIS_END-AXIS_START;
+const TODAY=new Date(2026,6,24);
+const parse=d=>{const[y,m,day]=d.split('/').map(Number);return new Date(y,m-1,day);};
+const pct=d=>((parse(d)-AXIS_START)/SPAN)*100;
+const pctDate=dt=>((dt-AXIS_START)/SPAN)*100;
 
-const PHASES=[
-  {id:'D0',label:'시작품 1st',sub:'검토 완료',  start:'2026-03-01',due:'2026-05-30',progress:100,status:'done',        color:'#15803D'},
-  {id:'D1',label:'시작품 2nd',sub:'수정 및 제작',start:'2026-06-01',due:'2026-06-30',progress:30, status:'in-progress',color:'#1D4ED8'},
-  {id:'D2',label:'시제품 1st',sub:'설계 및 제작', start:'2026-07-01',due:'2026-08-30',progress:0,  status:'waiting',    color:'#9CA3AF',note:'모델솔루션 & 디자인시대'}
+const tracks=[
+  {name:'파우치',proj:'레전드50+과제',color:'red',items:[
+    {date:'2026/07/24',task:'포장파우치 컨셉 및 샘플 발주',stage:'개발'},
+    {date:'2026/08/21',task:'포장파우치 샘플 제작',stage:'개발'},
+    {date:'2026/09/01',task:'포장파우치 본품 발주',stage:'개발'},
+    {date:'2026/10/08',task:'포장파우치 본품 제작 완료',stage:'개발',note:'디자인시대 계약 종료(잔금 지급)'},
+    {date:'2026/10/16',task:'포장파우치 10명 이상 피드백',stage:'개발',note:'과제 목표'},
+    {date:'2026/10/31',task:'과제보고서 작성',done:true,short:'과제 종료',stage:'개발',note:'레전드50+과제 종료'},
+  ]},
+  {name:'케이스',proj:'레전드50+과제',color:'red',items:[
+    {date:'2026/07/31',task:'케이스포장 컨셉 및 샘플 발주',stage:'개발'},
+    {date:'2026/08/31',task:'케이스포장 샘플 제작',stage:'개발'},
+    {date:'2026/09/14',task:'케이스포장 본품 발주',stage:'개발'},
+    {date:'2026/10/08',task:'케이스포장 본품 제작 완료',stage:'개발',note:'디자인시대 계약 종료(잔금 지급)'},
+    {date:'2026/10/16',task:'케이스포장 10명 이상 피드백',stage:'개발',note:'과제 목표'},
+    {date:'2026/10/31',task:'과제보고서 작성',done:true,short:'과제 종료',stage:'개발',note:'레전드50+과제 종료'},
+  ]},
+  {name:'시작품',proj:'Surearly Objet',color:'gray',items:[
+    {date:'2026/07/17',task:'광학부 1차 위치 검토',stage:'개발'},
+    {date:'2026/07/21',task:'스트립 분주위치',stage:'개발',note:'지난번 조정한 라인 위치'},
+    {date:'2026/07/31',task:'시작품 D1 보드 입고',stage:'개발',note:'보드 최종품'},
+    {date:'2026/08/07',task:'시작품 D1 검토/수정 및 발주',stage:'개발',note:'광학 및 스트립 라인 위치·분석 결과 확인(시약 연동)'},
+    {date:'2026/08/21',task:'시작품 D1 개발 완료',done:true,short:'D1 완료',stage:'개발',note:'오픈 앱과 블루투스만 연동하여 테스트 자동 진행, 분석 결과는 raw data 디스플레이'},
+  ]},
+  {name:'스틱',proj:'Surearly Objet',color:'gray',items:[
+    {date:'2026/08/14',task:'기준 스틱 수정 및 제작',stage:'—',note:'D1테스트에 필요(동시 수정)'},
+    {date:'2026/09/01',task:'스틱 컨셉 디자인 및 발주',stage:'—',note:'디자인 + 외부 기기와의 형합 검토용'},
+    {date:'2026/09/18',task:'스틱 컨셉 디자인 목업 제작',stage:'—'},
+    {date:'2026/10/12',task:'스틱 제품 디자인 및 워킹 목업 발주',stage:'—',note:'내부 기구 설계 포함'},
+    {date:'2026/10/23',task:'스틱 제작',stage:'—'},
+    {date:'2026/11/30',task:'스틱 제품 개발 완료',done:true,short:'개발 완료',stage:'—',note:'시약 개발과 연계(TRF 시약 27년 개발)'},
+  ]},
+  {name:'디자인 목업',proj:'레전드50+과제',color:'red',items:[
+    {date:'2026/08/28',task:'시제품 디자인 목업(CMF) 컨셉 및 발주',stage:'개발'},
+    {date:'2026/09/18',task:'시제품 디자인 목업(CMF) 제작 완료',stage:'개발'},
+    {date:'2026/10/02',task:'시제품 디자인 목업(CMF) 10명 이상 피드백',stage:'개발',note:'과제 목표'},
+  ],tbd:{at:'2026/10/20',label:'미확정 2건 *',
+    detail:'다음 2건은 원본에 날짜 미기재(필요시 진행):<br>• 시제품 디자인 목업(CMF) 샘플 제작 — <b>*레전드51+과제</b><br>• 시제품 디자인 목업(CMF) 검토 및 본품 발주 — <b>*레전드52+과제</b><br>나머지 37개 항목이 모두 "레전드50+과제"인 점에서 51+·52+는 오타로 추정(확인 필요).'}},
+  {name:'시제품',proj:'레전드50+과제',color:'red',items:[
+    {date:'2026/09/04',task:'시제품(사출) 설계 및 금형 제작 발주/기타 발주',stage:'개발',note:'도어, 버튼 설계(양산성 고려)'},
+    {date:'2026/09/18',task:'시제품 금형 제작 및 시사출',stage:'개발',note:'시사출 100개'},
+    {date:'2026/10/02',task:'시제품 금형 수정 및 사출/CMF 적용 완료',stage:'개발',note:'모델솔루션 계약 종료(잔금 지급)'},
+    {date:'2026/10/13',task:'시제품 개발 완료',done:true,short:'시제품 완료',stage:'개발'},
+    {date:'2026/10/16',task:'시제품 10명 이상 피드백',stage:'개발',note:'과제 목표'},
+    {date:'2026/10/31',task:'과제보고서 작성',done:true,short:'과제 종료',stage:'개발',note:'레전드50+과제 종료'},
+  ]},
 ];
-const VENDORS=[
-  {id:'motionbank',   name:'모션뱅크',  color:'#7C3AED',phases:['D1']},
-  {id:'suseong',      name:'수성아트텍',color:'#0891B2',phases:['D1']},
-  {id:'bespecx',      name:'베스펙스',  color:'#EA580C',phases:['D1']},
-  {id:'modelsolution',name:'모델솔루션',color:'#D97706',phases:['D2']},
-  {id:'designsidae',  name:'디자인시대',color:'#059669',phases:['D2']},
-  {id:'ghosdesign',   name:'고스디자인',color:'#DB2777',phases:['D2']}
-];
-const GATES=[
-  {id:'nfc',      icon:'📡',label:'NFC 적용 여부',  status:'resolved',resolution:'D1 미적용 확정',note:'D1 미적용 확정. D2에서 재결정 예정 — 적용 시 전체 일정 변경.',affects:['t05','t17']},
-  {id:'gui-vendor',icon:'🎨',label:'GUI 외주처 확정',status:'pending', note:'고스디자인 잠정. D2 착수 전 확정 필요.',affects:['t16']}
-];
-const TASKS=[
-  {id:'t01',phase:'D1',owner:'motionbank',   label:'파워버튼 보드 레이아웃 전달',    status:'done',       dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-07'}},
-  {id:'t02',phase:'D1',owner:'motionbank',   label:'보드 5종 제작',                  status:'in-progress',dependsOn:['t01'],  qty:'3set',gate:null,        blocker:null,                           est:{s:'2026-06-07',e:'2026-06-28'}},
-  {id:'t03',phase:'D1',owner:'motionbank',   label:'TRF 광학 균일도·재현성 확보',     status:'in-progress',dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
-  {id:'t04',phase:'D1',owner:'suseong',      label:'워킹 목업 제작',                 status:'in-progress',dependsOn:[],       qty:'3set',gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
-  {id:'t11',phase:'D1',owner:'suseong',      label:'카세트 제작 (창 넓힘)',            status:'waiting',    dependsOn:['t10'],  qty:'3set',gate:null,        blocker:'← TRF 성능확인 완료 대기',       est:{s:'2026-06-25',e:'2026-06-30'}},
-  {id:'t09',phase:'D1',owner:'bespecx',      label:'테스트 App 개발',                status:'in-progress',dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-01',e:'2026-06-25'}},
-  {id:'t05',phase:'D1',owner:null,           label:'NFC 미적용 확정',                status:'done',       dependsOn:[],       qty:null,  gate:'nfc',       blocker:null,                           est:{s:'2026-06-01',e:'2026-06-15'}},
-  {id:'t06',phase:'D1',owner:null,           label:'배터리 양면테이프 고정',           status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-20',e:'2026-06-28'}},
-  {id:'t07',phase:'D1',owner:null,           label:'시작품 GUI 사용 확정',             status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-15',e:'2026-06-28'}},
-  {id:'t08',phase:'D1',owner:null,           label:'App 연동 동작 시나리오 확인',      status:'waiting',    dependsOn:['t07','t09'],qty:null,gate:null,      blocker:'← GUI 확정 + App 개발 완료 대기', est:{s:'2026-06-25',e:'2026-06-30'}},
-  {id:'t10',phase:'D1',owner:null,           label:'시약을 통한 TRF 성능 확인',        status:'blocked',    dependsOn:['t03'],  qty:null,  gate:null,        blocker:'← TRF 재현성 확보 완료 대기',    est:{s:'2026-06-25',e:'2026-06-30'}},
-  {id:'t12',phase:'D1',owner:null,           label:'디핑 스틱 시작품 제작 (Stick-D0)',status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-06-20',e:'2026-06-30'}},
-  {id:'t13',phase:'D2',owner:'modelsolution',label:'CMF 적용',                       status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-07-31'}},
-  {id:'t14',phase:'D2',owner:'modelsolution',label:'파워버튼·Door·LCD 기구 설계',     status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-08-15'}},
-  {id:'t15',phase:'D2',owner:'designsidae',  label:'파우치·포장 케이스 디자인·제작',   status:'waiting',    dependsOn:[],       qty:null,  gate:null,        blocker:null,                           est:{s:'2026-07-01',e:'2026-08-15'}},
-  {id:'t16',phase:'D2',owner:'ghosdesign',   label:'GUI 외주 개발',                  status:'waiting',    dependsOn:[],       qty:null,  gate:'gui-vendor', blocker:null,                          est:{s:'2026-07-15',e:'2026-08-30'}},
-  {id:'t17',phase:'D2',owner:null,           label:'NFC 적용 여부 재결정 (D2)',       status:'waiting',    dependsOn:[],       qty:null,  gate:'nfc',       blocker:'← 적용 시 전체 일정 변경',       est:{s:'2026-07-01',e:'2026-07-15'}}
-];
-const CP=new Set(['t03','t10','t11','t08','t09','t07']); // critical path
 
-// ── STATE ──
-const S={activeGate:null,view:'swim',noteOpen:null,showLog:false,filters:{status:'all',vendor:'all',phase:'all'}};
+/* ---- KPI ---- */
+const all=tracks.flatMap(t=>t.items);
+const kpis=[
+  {v:all.length,u:'개',l:'전체 항목'},
+  {v:all.filter(i=>i.done).length,u:'개',l:'완료 마일스톤'},
+  {v:Math.round((parse('2026/11/30')-parse('2026/07/17'))/864e5),u:'일',l:'전체 기간'},
+  {v:all.filter(i=>parse(i.date)<=TODAY).length,u:'개',l:'기한 도래',accent:true},
+];
+const kEl=document.getElementById('kpis');
+kpis.forEach((k,i)=>{
+  if(i)kEl.insertAdjacentHTML('beforeend','<div class="sep"></div>');
+  kEl.insertAdjacentHTML('beforeend',
+    `<div class="kpi${k.accent?' accent':''}"><div class="v">${k.v}<span class="u">${k.u}</span></div><div class="l">${k.l}</div></div>`);
+});
 
-// ── STORAGE ──
-const ls=(k,v)=>{try{v===undefined?localStorage.getItem(k):localStorage.setItem(k,v)}catch(e){}};
-const lg=(k)=>{try{return localStorage.getItem(k)}catch(e){return null}};
-function getSt(t){return lg('ob_s_'+t.id)||t.status}
-function getNote(id){return lg('ob_n_'+id)||''}
-function getUpd(id){return lg('ob_u_'+id)}
-function logAct(tid,from,to){
-  const t=TASKS.find(x=>x.id===tid);if(!t)return;
-  try{const l=JSON.parse(lg('ob_log')||'[]');l.unshift({ts:Date.now(),tid,lbl:t.label,from,to});if(l.length>50)l.pop();localStorage.setItem('ob_log',JSON.stringify(l));}catch(e){}
-}
-function getLog(){try{return JSON.parse(lg('ob_log')||'[]')}catch(e){return[]}}
-function getFiltered(){
-  const f=S.filters;
-  return TASKS.filter(t=>{
-    const s=getSt(t);
-    if(f.status!=='all'&&s!==f.status)return false;
-    if(f.vendor!=='all'){if(f.vendor==='unassigned'&&t.owner!==null)return false;if(f.vendor!=='unassigned'&&t.owner!==f.vendor)return false;}
-    if(f.phase!=='all'&&t.phase!==f.phase)return false;
-    return true;
+/* ---- axis months ---- */
+const axisEl=document.getElementById('axis');
+[[7,'JUL'],[8,'AUG'],[9,'SEP'],[10,'OCT'],[11,'NOV']].forEach(([m,en])=>{
+  const p=pctDate(new Date(2026,m-1,1));
+  if(p<0||p>100)return;
+  axisEl.insertAdjacentHTML('beforeend',`<div class="mo" style="left:${p}%">${m}월<span class="en">${en}</span></div>`);
+});
+
+/* ---- overlay: gridlines, focus band, today ---- */
+const ov=document.getElementById('overlay');
+[8,9,10,11].forEach(m=>{
+  const p=pctDate(new Date(2026,m-1,1));
+  ov.insertAdjacentHTML('beforeend',`<div class="gl" style="left:${p}%"></div>`);
+});
+// focus band = October (crunch month)
+const fL=pctDate(new Date(2026,9,1)), fR=pctDate(new Date(2026,10,1));
+ov.insertAdjacentHTML('beforeend',`<div class="focus" style="left:${fL}%;width:${fR-fL}%"></div>`);
+ov.insertAdjacentHTML('beforeend',`<div class="focus-tag" style="left:${(fL+fR)/2}%">10월 집중</div>`);
+// today
+const tp=pctDate(TODAY);
+ov.insertAdjacentHTML('beforeend',`<div class="today" style="left:${tp}%"><span class="pin">오늘 7/24</span></div>`);
+
+/* ---- rows ---- */
+const gut=document.getElementById('gutter');
+const plot=document.getElementById('plot');
+tracks.forEach((track,ti)=>{
+  gut.insertAdjacentHTML('beforeend',
+    `<div class="glabel ${track.color}"><span class="n">${track.name}</span><span class="p">${track.proj}</span></div>`);
+
+  const row=document.createElement('div');
+  row.className='row';
+  const ps=track.items.map(i=>pct(i.date));
+  const L=Math.min(...ps), R=Math.max(...ps);
+  const bar=document.createElement('div');
+  bar.className='bar '+track.color;
+  bar.style.left=L+'%'; bar.style.width=(R-L)+'%';
+  row.appendChild(bar);
+
+  const firstP=ps[0];
+  const sl=document.createElement('div');
+  sl.className='startlab'+(firstP<6?' l':'');
+  sl.style.left=firstP+'%';
+  sl.textContent=track.items[0].date.replace('2026/','').replace('/','.');
+  row.appendChild(sl);
+
+  track.items.forEach((it,idx)=>{
+    const p=ps[idx];
+    const overdue=parse(it.date)<=TODAY;
+    const dd=it.date.replace('2026/','').replace('/','.');
+    if(it.done){
+      const dia=document.createElement('div');
+      dia.className='ms';dia.style.left=p+'%';
+      dia.dataset.t=ti;dia.dataset.i=idx;
+      row.appendChild(dia);
+      const lab=document.createElement('div');
+      let cls='mslabel'; if(p>85)cls+=' edge'; else if(p<10)cls+=' edge l';
+      lab.className=cls;lab.style.left=p+'%';
+      lab.dataset.t=ti;lab.dataset.i=idx;
+      lab.innerHTML=`<span class="d">${dd}</span><span class="t">${it.short||it.task}</span>`;
+      row.appendChild(lab);
+    }else{
+      const s=document.createElement('div');
+      s.className='step '+track.color+(overdue?' overdue':'');
+      s.style.left=p+'%';
+      s.dataset.t=ti;s.dataset.i=idx;
+      row.appendChild(s);
+    }
   });
+
+  if(track.tbd){
+    const c=document.createElement('div');
+    c.className='tbdchip';
+    const p=pct(track.tbd.at);
+    c.style.left=p+'%';c.style.transform='translate(-50%,-50%)';
+    c.textContent=track.tbd.label;
+    c.dataset.t=ti;c.dataset.tbd='1';
+    row.appendChild(c);
+  }
+
+  plot.appendChild(row);
+});
+
+/* ---- click → detail panel ---- */
+const detail=document.getElementById('detail');
+let selEl=null;
+
+function clearSel(){ if(selEl){selEl.classList.remove('sel');selEl=null;} }
+
+function showStep(ti,idx,markerEl){
+  const track=tracks[ti], it=track.items[idx];
+  const overdue=parse(it.date)<=TODAY;
+  const dd=it.date.replace('2026/','').replace('/','.');
+  const wd=['일','월','화','수','목','금','토'][parse(it.date).getDay()];
+
+  const chips=[`<span class="chip trk">${track.name} · ${track.proj}</span>`,
+               `<span class="chip date">${dd} (${wd})</span>`];
+  if(it.done)chips.push(`<span class="chip ms">◆ 마일스톤</span>`);
+  if(overdue)chips.push(`<span class="chip ov">기한 도래·경과</span>`);
+
+  // sequence strip within track
+  const seq=track.items.map((s,j)=>{
+    const sd=s.date.replace('2026/','').replace('/','.');
+    return `<span class="sq${j===idx?' cur':''}" data-t="${ti}" data-i="${j}">${sd}</span>`;
+  }).join('<span class="arw">→</span>');
+
+  detail.className='detail on '+track.color;
+  detail.innerHTML=
+    `<div class="bar-strip ${track.color}"></div>
+     <div class="body">
+       <div class="top">${chips.join('')}<button class="close" aria-label="닫기">×</button></div>
+       <h3>${it.task}</h3>
+       <div class="meta">
+         <div class="m"><span class="mk">계획일</span><span class="mv">2026.${dd}</span></div>
+         <div class="m"><span class="mk">단계</span><span class="mv">${it.stage||'—'}</span></div>
+         <div class="m"><span class="mk">진행 상태</span><span class="mv">미기재</span></div>
+         <div class="m"><span class="mk">완료일</span><span class="mv">미기재</span></div>
+       </div>
+       ${it.note?`<div class="note">${it.note}</div>`:''}
+       <div class="hint">이 트랙의 순서 (클릭 이동):</div>
+       <div class="seq">${seq}</div>
+     </div>`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  clearSel();
+  if(markerEl){markerEl.classList.add('sel');selEl=markerEl;}
 }
 
-// ── HELPERS ──
-const dBetween=(a,b)=>Math.round((b-a)/86400000);
-const dLeft=(d)=>dBetween(TODAY,new Date(d));
-const fmtD=(s)=>{const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`};
-function fmtAgo(ts){if(!ts)return'';const m=Math.floor((Date.now()-Number(ts))/60000);if(m<1)return'방금';if(m<60)return`${m}분 전`;if(m<1440)return`${Math.floor(m/60)}h 전`;return`${Math.floor(m/1440)}d 전`}
-const SL={done:'완료','in-progress':'진행',waiting:'대기',blocked:'막힘'};
-const SI={done:'✓','in-progress':'↻',waiting:'○',blocked:'✕'};
-const SC={done:'done','in-progress':'in-progress',waiting:'waiting',blocked:'blocked'};
-function chip(s){return`<span class="sc ${SC[s]}" role="img" aria-label="${SL[s]}"><span aria-hidden="true">${SI[s]}</span> ${SL[s]}</span>`}
-const PCOL={done:'#15803D','in-progress':'#1D4ED8',waiting:'#D1D5DB'};
-const SCOL={done:'#15803D','in-progress':'#1D4ED8',waiting:'#9CA3AF',blocked:'#DC2626'};
-function trend(p){
-  if(p.status==='done')return'✓';if(p.status==='waiting')return'—';
-  const el=dBetween(new Date(p.start),TODAY)/dBetween(new Date(p.start),new Date(p.due))*100;
-  const d=p.progress-el;return d>=5?'↑':d<=-15?'↓':'→';
-}
-function trendColor(v){return v==='↑'?'#15803D':v==='↓'?'#DC2626':'#6B7280'}
-
-// ── RENDER ──
-function render(){
-  document.getElementById('app').innerHTML=[
-    rHdr(),rKPI(),rFB(),rAlert(),rGates(),rTL(),rContent(),rLog(),rLegend()
-  ].join('');
-  document.querySelectorAll('.ni').forEach(el=>{
-    el.addEventListener('blur',()=>{try{localStorage.setItem('ob_n_'+el.dataset.tid,el.value)}catch(e){}});
-  });
+function showTbd(ti){
+  const track=tracks[ti];
+  detail.className='detail on '+track.color;
+  detail.innerHTML=
+    `<div class="bar-strip ${track.color}"></div>
+     <div class="body">
+       <div class="top">
+         <span class="chip trk">${track.name} · ${track.proj}</span>
+         <span class="chip ov">일정 미확정</span>
+         <button class="close" aria-label="닫기">×</button>
+       </div>
+       <h3>미확정 항목 · 필요시 진행</h3>
+       <div class="note">${track.tbd.detail}</div>
+     </div>`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  clearSel();
 }
 
-function rHdr(){
-  const rem=dLeft('2026-06-30');
-  return`<div class="hdr"><div class="hdr-bar"></div><div><div class="hdr-title">OBJET 개발 컨트롤타워</div><div class="hdr-sub">Surearly · 미희님 (SuGenTech) · 6개 외주처 모니터링</div></div><div class="hdr-r"><div class="today-pill">TODAY&nbsp;&nbsp;2026.06.23</div><div class="d1w">⚠ D1 마감 ${rem}일 전</div></div></div>`;
-}
-
-function rKPI(){
-  const all=TASKS, st=all.map(t=>getSt(t));
-  const doneN=st.filter(s=>s==='done').length;
-  const progN=st.filter(s=>s==='in-progress').length;
-  const blkN=st.filter(s=>s==='blocked').length;
-  const d1=all.filter(t=>t.phase==='D1');
-  const d1d=d1.filter(t=>getSt(t)==='done').length;
-  const rem=dLeft('2026-06-30');
-  return`<div class="kpi">
-<div class="kc ${blkN>0?'red':'grn'}"><div class="kc-lbl">블로커</div><div class="kc-val">${blkN}</div><div class="kc-sub">즉시 조치 필요</div></div>
-<div class="kc blu"><div class="kc-lbl">D1 완료율</div><div class="kc-val">${Math.round(d1d/d1.length*100)}%</div><div class="kc-sub">${d1d}/${d1.length} 태스크</div></div>
-<div class="kc blu"><div class="kc-lbl">진행중</div><div class="kc-val">${progN}</div><div class="kc-sub">활성 태스크</div></div>
-<div class="kc ${rem<=7?'red':'grn'}"><div class="kc-lbl">D1 마감까지</div><div class="kc-val">D-${rem}</div><div class="kc-sub">6/30 기준</div></div>
-</div>`;
-}
-
-function rFB(){
-  const f=S.filters;
-  const hasF=f.status!=='all'||f.vendor!=='all'||f.phase!=='all';
-  const sOpts=[{v:'all',l:'전체'},{v:'done',l:'완료'},{v:'in-progress',l:'진행'},{v:'waiting',l:'대기'},{v:'blocked',l:'막힘'}];
-  const pOpts=[{v:'all',l:'전체'},{v:'D1',l:'D1'},{v:'D2',l:'D2'}];
-  const vOpts=[{v:'all',l:'전체'},...VENDORS.map(v=>({v:v.id,l:v.name})),{v:'unassigned',l:'미배정'}];
-  const views=[{v:'swim',l:'🗂 스윔레인'},{v:'gantt',l:'📊 간트'},{v:'list',l:'📋 목록'}];
-  return`<div class="fb">
-<div class="fg"><span class="fl">상태</span>${sOpts.map(o=>`<button class="fc${f.status===o.v?' on':''}" onclick="setF('status','${o.v}')">${o.l}</button>`).join('')}</div>
-<div class="fsep"></div>
-<div class="fg"><span class="fl">Phase</span>${pOpts.map(o=>`<button class="fc${f.phase===o.v?' on':''}" onclick="setF('phase','${o.v}')">${o.l}</button>`).join('')}</div>
-<div class="fsep"></div>
-<div class="fg"><span class="fl">벤더</span>${vOpts.map(o=>`<button class="fc${f.vendor===o.v?' on':''}" onclick="setF('vendor','${o.v}')">${o.l}</button>`).join('')}</div>
-${hasF?`<button class="clr" onclick="clrF()">✕ 초기화</button>`:''}
-<div class="vg">${views.map(o=>`<button class="vb${S.view===o.v?' on':''}" onclick="setV('${o.v}')">${o.l}</button>`).join('')}</div>
-</div>`;
-}
-
-function rAlert(){
-  const bl=TASKS.filter(t=>getSt(t)==='blocked');
-  const pg=GATES.filter(g=>g.status==='pending');
-  if(!bl.length&&!pg.length)return'';
-  const lines=[...bl.map(t=>`<b>${t.label}</b>${t.blocker?' — '+t.blocker:''}`),
-               ...pg.map(g=>`<b>미결 게이트: ${g.label}</b> — ${g.note}`)];
-  return`<div class="alert"><span style="font-size:15px;flex-shrink:0">🚨</span><div class="al-txt">지금 막힌 항목 / 미결 게이트<br><span>${lines.join('<br>')}</span></div></div>`;
-}
-
-function rGates(){
-  return`<div class="card"><div class="ch"><span>▲</span>의사결정 게이트</div><div class="cb"><div class="gg">
-${GATES.map(g=>{
-  const on=S.activeGate===g.id;
-  const stag=g.status==='resolved'?`<span class="stag ok">✓ ${g.resolution}</span>`:`<span class="stag pend">⚠ 미결정</span>`;
-  return`<button class="gb${on?' on':''}" onclick="togG('${g.id}')" aria-pressed="${on}"><div class="gr">${g.icon} <span class="gl">${g.label}</span>${stag}</div><div class="gn">${g.note}</div><div class="ga">▸ 영향 태스크 ${g.affects.length}개${on?' — 하이라이트 ON':' — 클릭하면 하이라이트'}</div></button>`;
-}).join('')}
-</div></div></div>`;
-}
-
-function rTL(){
-  const S0=new Date('2026-04-01'),E0=new Date('2026-09-30');
-  const tot=dBetween(S0,E0);
-  const pN=s=>dBetween(S0,new Date(s))/tot*100;
-  const segs=PHASES.map(p=>{const l=pN(p.start),w=pN(p.due)-l,c=PCOL[p.status],op=p.status==='waiting'?.4:.85;return`<div class="tls" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${c};opacity:${op}"></div>`;}).join('');
-  const td=pN(TODAY_STR);
-  const markers=PHASES.map(p=>{const l=pN(p.due),c=PCOL[p.status];return`<div class="tlm" style="left:${l.toFixed(2)}%;top:-2px"><div class="tlm-id" style="color:${c}">${p.id}</div><div class="tlm-dot" style="background:${c}"></div><div class="tlm-dt">${fmtD(p.due)}</div></div>`;}).join('');
-  const cards=PHASES.map(p=>{
-    const rem=dLeft(p.due),isCur=p.status==='in-progress',isDone=p.status==='done';
-    const c=PCOL[p.status],tr=trend(p),tc=trendColor(tr);
-    const dLbl=isDone?`완료 (${fmtD(p.due)})`:isCur?`${fmtD(p.due)} 마감 · ${rem}일 후`:`목표 ${fmtD(p.due)}`;
-    return`<div class="pc${isCur?' cur':''}">
-${!isDone?`<div class="ra" style="color:${tc}" title="추세">${tr}</div>`:''}
-<div class="pc-id" style="color:${c}">${p.id}</div>
-<div class="pc-nm">${p.label}</div>
-<div class="pc-sb">${p.sub}${p.note?' · '+p.note:''}</div>
-<div class="pc-due${isCur&&rem<=7?' urg':''}">${dLbl}</div>
-<div class="pw"><div class="pf" style="width:${p.progress}%;background:${c}"></div></div>
-<div class="pp" style="color:${c}">${p.progress}%</div>
-</div>`;
-  }).join('');
-  return`<div class="card"><div class="ch"><span>▶</span>Phase 타임라인</div><div class="cb">
-<div class="tl"><div class="tlw"><div class="tlt">${segs}<div class="tld" style="left:${td.toFixed(2)}%;top:-18px;height:44px"><div class="tld-tip">TODAY</div></div>${markers}</div></div>
-<div class="tlr">${['4/1','5/1','6/1','7/1','8/1','9/1','9/30'].map(l=>`<span>${l}</span>`).join('')}</div>
-</div><div class="pcs">${cards}</div></div></div>`;
-}
-
-function rContent(){
-  if(S.view==='gantt')return rGantt();
-  if(S.view==='list') return rList();
-  return rSwim();
-}
-
-function rSwim(){
-  const fids=new Set(getFiltered().map(t=>t.id));
-  const bv={};VENDORS.forEach(v=>{bv[v.id]=[];});
-  const un={D1:[],D2:[]};
-  TASKS.forEach(t=>{if(!fids.has(t.id))return;t.owner&&bv[t.owner]?bv[t.owner].push(t):un[t.phase]&&un[t.phase].push(t);});
-  const secs=[{ph:'D1',label:'D1 — 시작품 2nd (~6/30)',vs:VENDORS.filter(v=>v.phases.includes('D1'))},{ph:'D2',label:'D2 — 시제품 1st (~8/30)',vs:VENDORS.filter(v=>v.phases.includes('D2'))}];
-  const pf=S.filters.phase;
-  return`<div class="card"><div class="ch"><span>◈</span>벤더 Swim Lane</div>
-${secs.filter(s=>pf==='all'||pf===s.ph).map(sec=>`
-<div class="pgl">${sec.label}</div>
-${sec.vs.map(v=>{
-  const ts=bv[v.id]||[];
-  const bl=ts.filter(t=>getSt(t)==='blocked').length;
-  const dn=ts.filter(t=>getSt(t)==='done').length;
-  if(!ts.length)return`<div class="sl"><div class="lh"><div class="vd" style="background:${v.color}"></div><div class="vn">${v.name}</div><span class="tc2" style="margin-left:auto">필터 없음</span></div></div>`;
-  return`<div class="sl"><div class="lh"><div class="vd" style="background:${v.color}"></div><div class="vn">${v.name}</div>${v.phases.map(p=>`<span class="pp2">${p}</span>`).join('')}${bl?`<span class="bw">⛔ ${bl}</span>`:''}<span class="tc2">${dn}/${ts.length}</span></div><div class="lb">${ts.map(rTK).join('')}</div></div>`;
-}).join('')}
-${(()=>{const ts=un[sec.ph];if(!ts||!ts.length)return'';return`<div class="uw"><div class="ul">${sec.ph} 기타 태스크</div><div class="ut">${ts.map(rTK).join('')}</div></div>`;})()}
-`).join('')}
-</div>`;
-}
-
-function rTK(task){
-  const eff=getSt(task);
-  const hl=S.activeGate&&GATES.find(g=>g.id===S.activeGate)?.affects.includes(task.id);
-  const gd=task.gate?GATES.find(g=>g.id===task.gate):null;
-  const no=S.noteOpen===task.id;
-  const nt=getNote(task.id);
-  const upd=getUpd(task.id);
-  const icp=CP.has(task.id);
-  const nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'}[eff];
-  return`<div class="tk s-${eff}${hl?' hl':''}${icp?' cp':''}" id="tc-${task.id}">
-<div class="tk-top">${chip(eff)}${task.qty?`<span class="sc-qty">${task.qty}</span>`:''}<div class="tka"><button class="ib" onclick="togN('${task.id}')" title="메모">✏</button><button class="ib" onclick="cycS('${task.id}')" title="→ ${SL[nxt]}">⇄</button></div></div>
-<div class="tk-lbl">${task.label}</div>
-<div class="tk-meta"><span class="tk-ph">${task.phase}</span>${icp?`<span class="tk-cp">★ 크리티컬</span>`:''}${upd?`<span class="tk-upd">${fmtAgo(upd)}</span>`:''}</div>
-${task.blocker&&eff!=='done'?`<div class="blk"><span aria-hidden="true">⛔</span><span>${task.blocker}</span></div>`:''}
-${gd?`<div class="gba">🔀 ${gd.label}</div>`:''}
-${no||nt?`<div class="na"><div class="nl">메모</div>${no?`<textarea class="ni" data-tid="${task.id}">${nt}</textarea><button class="ns" onclick="svN('${task.id}')">저장</button>`:`<div class="nd" onclick="togN('${task.id}')">${nt||'메모 추가...'}</div>`}</div>`:''}
-</div>`;
-}
-
-function rGantt(){
-  const S0=new Date('2026-04-01'),E0=new Date('2026-09-30');
-  const tot=dBetween(S0,E0);
-  const pN=s=>Math.max(0,Math.min(100,dBetween(S0,new Date(s))/tot*100));
-  const td=pN(TODAY_STR);
-  const fids=new Set(getFiltered().map(t=>t.id));
-  const pf=S.filters.phase;
-  const months=['4월','5월','6월','7월','8월','9월'];
-  let rows='';
-  ['D1','D2'].forEach(ph=>{
-    if(pf!=='all'&&pf!==ph)return;
-    const pts=TASKS.filter(t=>t.phase===ph&&fids.has(t.id));
-    if(!pts.length)return;
-    rows+=`<div class="g-row g-sep"><div class="g-lbl" style="width:200px"><span style="font-size:10px;font-weight:800;color:var(--text3);letter-spacing:.06em;padding-left:4px">${ph}</span></div><div class="g-trk"><div class="g-td" style="left:${td.toFixed(2)}%"></div></div></div>`;
-    pts.forEach(t=>{
-      const eff=getSt(t);
-      const l=pN(t.est.s),w=Math.max(0.5,pN(t.est.e)-l);
-      const v=t.owner?VENDORS.find(x=>x.id===t.owner):null;
-      const icp=CP.has(t.id);
-      rows+=`<div class="g-row">
-<div class="g-lbl" style="width:200px"><div class="vd" style="background:${v?v.color:'var(--border)'}"></div>${chip(eff)}<div class="g-lt" title="${t.label}">${t.label}</div></div>
-<div class="g-trk"><div class="g-td" style="left:${td.toFixed(2)}%"></div><div class="g-bar" style="left:${l.toFixed(2)}%;width:${w.toFixed(2)}%;background:${SCOL[eff]};${icp?'outline:1.5px solid #F59E0B;outline-offset:1px':''}" title="${t.label} (${fmtD(t.est.s)}~${fmtD(t.est.e)})">${w>8?t.label.slice(0,10):''}</div></div>
-</div>`;
-    });
-  });
-  return`<div class="card"><div class="ch"><span>📊</span>간트 차트 <span style="font-size:9px;color:var(--text3);font-weight:400;margin-left:4px">예상 일정 · ★ 크리티컬 패스</span></div>
-<div class="gw"><div class="g-hdr">${months.map(m=>`<div class="g-mo">${m}</div>`).join('')}</div>${rows}</div></div>`;
-}
-
-function rList(){
-  const filtered=getFiltered();
-  const ord={blocked:0,'in-progress':1,waiting:2,done:3};
-  const sorted=[...filtered].sort((a,b)=>(ord[getSt(a)]??9)-(ord[getSt(b)]??9)||a.phase.localeCompare(b.phase));
-  if(!sorted.length)return`<div class="card"><div class="cb" style="text-align:center;color:var(--text3);padding:24px">해당 조건의 태스크가 없습니다.</div></div>`;
-  const nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'};
-  const rows=sorted.map(t=>{
-    const eff=getSt(t);const v=t.owner?VENDORS.find(x=>x.id===t.owner):null;const gd=t.gate?GATES.find(g=>g.id===t.gate):null;const nt=getNote(t.id);const icp=CP.has(t.id);const upd=getUpd(t.id);
-    return`<tr class="${eff==='blocked'?'s-b':eff==='in-progress'?'s-p':''}">
-<td><span style="font-family:var(--mono);font-size:10px">${t.phase}</span></td>
-<td>${chip(eff)}</td>
-<td>${v?`<span style="display:inline-flex;align-items:center;gap:4px"><span class="vd" style="background:${v.color}"></span>${v.name}</span>`:`<span style="color:var(--text3)">미배정</span>`}</td>
-<td><span style="font-weight:500">${t.label}</span>${icp?`<span class="tk-cp" style="margin-left:5px">★</span>`:''}${t.qty?`<span class="sc-qty" style="margin-left:4px">${t.qty}</span>`:''}${t.blocker&&eff!=='done'?`<div style="font-size:10px;color:#7F1D1D;margin-top:2px">⛔ ${t.blocker}</div>`:''}${gd?`<div class="gba" style="margin-top:3px">🔀 ${gd.label}</div>`:''}${nt?`<div style="font-size:10px;color:var(--text2);margin-top:2px">✏ ${nt}</div>`:''}</td>
-<td><span style="font-size:9px;font-family:var(--mono);color:var(--text3)">${fmtD(t.est.s)}–${fmtD(t.est.e)}</span>${upd?`<br><span style="font-size:9px;font-family:var(--mono);color:var(--text3)">${fmtAgo(upd)}</span>`:''}</td>
-<td><button class="ib" onclick="cycS('${t.id}')" title="→ ${SL[nxt[eff]]}">⇄</button><button class="ib" onclick="togN('${t.id}')" title="메모">✏</button></td>
-</tr>`;
-  }).join('');
-  return`<div class="card"><div class="ch"><span>📋</span>목록 뷰 — ${sorted.length}개</div>
-<div style="overflow-x:auto;padding:14px"><table class="ltb"><thead><tr><th>Phase</th><th>상태</th><th>벤더</th><th>태스크</th><th>기간</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
-}
-
-function rLog(){
-  const log=getLog(),cnt=log.length;
-  return`<div style="margin-bottom:10px">
-<button class="at-btn" onclick="togLog()"><span>🕐</span> 변경 이력<span class="at-cnt">${cnt}건</span><span style="margin-left:4px">${S.showLog?'▲':'▼'}</span></button>
-${S.showLog?`<div class="al-box">${!cnt?`<div class="ai" style="color:var(--text3);font-style:italic">이력 없음. ⇄ 버튼으로 상태 변경 시 기록됩니다.</div>`:log.map(e=>`<div class="ai"><span class="ai-t">${fmtAgo(e.ts)}</span><span style="flex:1">${e.lbl}</span><span class="ai-f">${SL[e.from]||e.from}</span><span style="color:var(--text3);margin:0 3px">→</span><span class="ai-to ${SC[e.to]||''}">${SL[e.to]||e.to}</span></div>`).join('')}</div>`:''}
-</div>`;
-}
-
-function rLegend(){
-  return`<div class="card"><div class="lgd">
-${['done','in-progress','waiting','blocked'].map(s=>`<div class="li">${chip(s)}</div>`).join('')}
-<div class="li" style="color:#D97706">★ 크리티컬 패스</div>
-<div class="li" style="color:var(--text3)">↑→↓ 추세 · ⇄ 상태 토글 · ✏ 메모 · localStorage 저장</div>
-<div style="margin-left:auto;font-size:10px;color:var(--text3)">색+아이콘 병행 · WCAG AA</div>
-</div></div>`;
-}
-
-// ── EVENTS ──
-function togG(id){S.activeGate=(S.activeGate===id?null:id);render()}
-function cycS(tid){
-  const t=TASKS.find(x=>x.id===tid);if(!t)return;
-  const cur=getSt(t),nxt={done:'in-progress','in-progress':'waiting',waiting:'blocked',blocked:'done'}[cur]||'waiting';
-  logAct(tid,cur,nxt);try{localStorage.setItem('ob_s_'+tid,nxt);localStorage.setItem('ob_u_'+tid,Date.now())}catch(e){}
-  render();
-}
-function togN(tid){S.noteOpen=(S.noteOpen===tid?null:tid);render();if(S.noteOpen)setTimeout(()=>{const el=document.querySelector(`.ni[data-tid="${tid}"]`);if(el)el.focus()},50)}
-function svN(tid){const el=document.querySelector(`.ni[data-tid="${tid}"]`);if(el)try{localStorage.setItem('ob_n_'+tid,el.value)}catch(e){}; S.noteOpen=null;render()}
-function setF(k,v){S.filters[k]=v;render()}
-function clrF(){S.filters={status:'all',vendor:'all',phase:'all'};render()}
-function setV(v){S.view=v;render()}
-function togLog(){S.showLog=!S.showLog;render()}
-
-render();
+document.addEventListener('click',e=>{
+  const close=e.target.closest('.close');
+  if(close){detail.className='detail';clearSel();return;}
+  const sq=e.target.closest('.seq .sq');
+  if(sq){
+    const ti=+sq.dataset.t, idx=+sq.dataset.i;
+    const marker=plot.querySelector(`.step[data-t="${ti}"][data-i="${idx}"], .ms[data-t="${ti}"][data-i="${idx}"]`);
+    showStep(ti,idx,marker);return;
+  }
+  const m=e.target.closest('.step,.ms,.mslabel,.tbdchip');
+  if(!m)return;
+  if(m.dataset.tbd){showTbd(+m.dataset.t);return;}
+  const ti=+m.dataset.t, idx=+m.dataset.i;
+  // if a label clicked, highlight its diamond marker
+  let marker=m;
+  if(m.classList.contains('mslabel')){
+    marker=plot.querySelector(`.ms[data-t="${ti}"][data-i="${idx}"]`);
+  }
+  showStep(ti,idx,marker);
+});
 </script>
 </body>
 </html>
