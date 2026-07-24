@@ -240,6 +240,9 @@ const pct=d=>((parse(d)-AXIS_START)/SPAN)*100;
 const pctDate=dt=>((dt-AXIS_START)/SPAN)*100;
 
 const tracks=[
+  {name:'디자인 변경 목업',proj:'레전드50+과제',color:'red',phase:true,labelBelow:true,items:[
+    {date:'2026/07/24',end:'2026/08/05',task:'디자인 변경 목업 제작',stage:'개발',short:'목업 제작',note:'8.5까지 완료 목표(오늘 착수)'},
+  ]},
   {name:'파우치',proj:'레전드50+과제',color:'red',items:[
     {date:'2026/07/24',task:'포장파우치 컨셉 및 샘플 발주',stage:'개발'},
     {date:'2026/08/21',task:'포장파우치 샘플 제작',stage:'개발'},
@@ -385,7 +388,7 @@ tracks.forEach((track,ti)=>{
       seg.dataset.t=ti;seg.dataset.i=idx;
       row.appendChild(seg);
       const lab=document.createElement('div');
-      lab.className='phaselab'+(idx%2?' below':'');
+      lab.className='phaselab'+((track.labelBelow||idx%2)?' below':'');
       lab.style.left=((p+pEnd)/2)+'%';
       lab.dataset.t=ti;lab.dataset.i=idx;
       const ed=it.end.replace('2026/','').replace('/','.');
@@ -411,7 +414,7 @@ tracks.forEach((track,ti)=>{
       if(track.phase){
         // labeled point (e.g. deadline) inside a phase track
         const lab=document.createElement('div');
-        lab.className='phaselab'+(idx%2?' below':'');
+        lab.className='phaselab'+((track.labelBelow||idx%2)?' below':'');
         lab.style.left=p+'%';
         lab.dataset.t=ti;lab.dataset.i=idx;
         lab.innerHTML=`<span class="t">${it.short||it.task}</span><span class="d">~${dd}</span>`;
