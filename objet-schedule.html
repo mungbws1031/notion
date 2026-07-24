@@ -61,15 +61,15 @@
   /* axis */
   .chart{position:relative;min-width:640px;}
   .chart-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .axis{display:grid;grid-template-columns:var(--gutter) 1fr;margin-bottom:6px;}
+  .axis{display:grid;grid-template-columns:var(--gutter) 1fr;margin-bottom:32px;}
   .axis .plot{position:relative;height:22px;}
   .axis .mo{position:absolute;top:0;font-family:var(--mono);font-size:11px;font-weight:700;
     color:var(--ink-3);transform:translateX(-2px);}
   .axis .mo .en{font-weight:400;font-size:9px;margin-left:3px;}
 
   .plotwrap{display:grid;grid-template-columns:var(--gutter) 1fr;}
-  .gutter{display:flex;flex-direction:column;}
-  .plot{position:relative;}
+  .gutter{display:grid;grid-auto-rows:62px;row-gap:26px;}
+  .plot{position:relative;display:grid;grid-auto-rows:62px;row-gap:26px;}
 
   /* gridlines + focus band + today (overlay, full height) */
   .overlay{position:absolute;inset:0;pointer-events:none;z-index:0;}
