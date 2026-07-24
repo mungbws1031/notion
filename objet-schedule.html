@@ -301,20 +301,22 @@ const tracks=[
     {date:'2026/09/02',end:'2026/10/31',task:'본품생산 및 입고',stage:'양산',short:'본품생산·입고',note:'입고 완료 10.31'},
   ]},
   {name:'아웃박스',proj:'레전드50+과제',color:'red',phase:true,items:[
-    {date:'2026/07/24',task:'샘플 재질확정',stage:'양산',deadline:true,short:'재질확정',note:'7.24까지 재질 확정'},
-    {date:'2026/07/27',end:'2026/08/25',task:'샘플제작 및 확인',stage:'양산',short:'샘플제작·확인'},
-    {date:'2026/08/25',end:'2026/09/01',task:'샘플 확인 후 본품생산 결정',stage:'양산',short:'본품생산 결정'},
-    {date:'2026/09/02',end:'2026/10/31',task:'본품생산 및 입고',stage:'양산',short:'본품생산·입고',note:'입고 완료 10.31'},
+    {date:'2026/08/25',task:'샘플 재질확정',stage:'양산',deadline:true,short:'재질확정',note:'파우치·포장재 샘플 종료 시점(8.25)에 착수 · 개발기간 6주'},
+    {date:'2026/08/26',end:'2026/09/08',task:'샘플제작 및 확인',stage:'양산',short:'샘플제작·확인'},
+    {date:'2026/09/08',end:'2026/09/15',task:'샘플 확인 후 본품생산 결정',stage:'양산',short:'본품생산 결정'},
+    {date:'2026/09/15',end:'2026/10/06',task:'본품생산 및 입고',stage:'양산',short:'본품생산·입고',note:'입고 완료 10.06 (6주 소요)'},
   ]},
 ];
 
 /* ---- KPI ---- */
 const all=tracks.flatMap(t=>t.items);
 document.getElementById('trackCount').textContent=tracks.length;
+const allBounds=all.flatMap(i=>[parse(i.date), parse(i.end||i.date)]);
+const spanDays=Math.round((Math.max(...allBounds)-Math.min(...allBounds))/864e5);
 const kpis=[
   {v:all.length,u:'개',l:'전체 항목'},
   {v:all.filter(i=>i.done).length,u:'개',l:'완료 마일스톤'},
-  {v:Math.round((parse('2026/11/30')-parse('2026/07/17'))/864e5),u:'일',l:'전체 기간'},
+  {v:spanDays,u:'일',l:'전체 기간'},
   {v:all.filter(i=>parse(i.date)<=TODAY).length,u:'개',l:'기한 도래',accent:true},
 ];
 const kEl=document.getElementById('kpis');
