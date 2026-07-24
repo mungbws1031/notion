@@ -102,6 +102,20 @@
   .step.gray{background:var(--su-gray);}
   .step.overdue{box-shadow:0 0 0 3px var(--su-red-wash),0 0 0 4px var(--su-red);}
 
+  /* phase segment (기간형 항목) */
+  .phase{position:absolute;top:50%;transform:translateY(-50%);height:15px;border-radius:8px;z-index:2;
+    cursor:pointer;transition:filter .12s;}
+  .phase:hover{filter:brightness(.95);}
+  .phase.red{background:var(--su-red);opacity:.82;}
+  .phase.gray{background:var(--su-gray);opacity:.82;}
+  .phase.sel{outline:2px solid #fff;box-shadow:0 0 0 4px var(--su-red);opacity:1;}
+  .phase.overdue{background:repeating-linear-gradient(45deg,var(--su-red),var(--su-red) 5px,#c8003b 5px,#c8003b 10px);opacity:1;}
+  .phaselab{position:absolute;bottom:calc(50% + 12px);transform:translateX(-50%);text-align:center;
+    white-space:nowrap;z-index:5;pointer-events:none;}
+  .phaselab .t{font-size:10.5px;font-weight:800;color:var(--ink);}
+  .phaselab .d{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--ink-3);display:block;}
+  .phaselab.below{bottom:auto;top:calc(50% + 12px);}
+
   .ms{position:absolute;top:50%;transform:translate(-50%,-50%) rotate(45deg);
     width:14px;height:14px;background:var(--ink);border:2px solid var(--su-red);z-index:4;border-radius:2px;}
   .mslabel{position:absolute;bottom:calc(50% + 15px);transform:translateX(-50%);
@@ -183,7 +197,7 @@
 <div class="wrap">
   <p class="eyebrow">Development Timeline · v2</p>
   <h1>Surearly Objet 개발 일정</h1>
-  <div class="sub">femtech TRF 분석기 · 6개 트랙 <span class="mono">2026.07.17 – 11.30</span></div>
+  <div class="sub">femtech TRF 분석기 · <span id="trackCount">6</span>개 트랙 <span class="mono">2026.07.17 – 11.30</span></div>
 
   <div class="kpis" id="kpis"></div>
 
@@ -271,10 +285,17 @@ const tracks=[
     {date:'2026/10/16',task:'시제품 10명 이상 피드백',stage:'개발',note:'과제 목표'},
     {date:'2026/10/31',task:'과제보고서 작성',done:true,short:'과제 종료',stage:'개발',note:'레전드50+과제 종료'},
   ]},
+  {name:'포장재 양산',proj:'레전드50+과제',color:'red',phase:true,items:[
+    {date:'2026/07/24',task:'샘플 재질확정',stage:'양산',deadline:true,short:'재질확정',note:'7.24까지 재질 확정'},
+    {date:'2026/07/27',end:'2026/08/25',task:'샘플제작 및 확인',stage:'양산',short:'샘플제작·확인'},
+    {date:'2026/08/25',end:'2026/09/01',task:'샘플 확인 후 본품생산 결정',stage:'양산',short:'본품생산 결정'},
+    {date:'2026/09/02',end:'2026/10/31',task:'본품생산 및 입고',stage:'양산',short:'본품생산·입고',note:'입고 완료 10.31'},
+  ]},
 ];
 
 /* ---- KPI ---- */
 const all=tracks.flatMap(t=>t.items);
+document.getElementById('trackCount').textContent=tracks.length;
 const kpis=[
   {v:all.length,u:'개',l:'전체 항목'},
   {v:all.filter(i=>i.done).length,u:'개',l:'완료 마일스톤'},
@@ -320,24 +341,45 @@ tracks.forEach((track,ti)=>{
   const row=document.createElement('div');
   row.className='row';
   const ps=track.items.map(i=>pct(i.date));
-  const L=Math.min(...ps), R=Math.max(...ps);
+  const pe=track.items.map(i=>pct(i.end||i.date));
+  const L=Math.min(...ps), R=Math.max(...pe);
   const bar=document.createElement('div');
   bar.className='bar '+track.color;
   bar.style.left=L+'%'; bar.style.width=(R-L)+'%';
   row.appendChild(bar);
 
-  const firstP=ps[0];
-  const sl=document.createElement('div');
-  sl.className='startlab'+(firstP<6?' l':'');
-  sl.style.left=firstP+'%';
-  sl.textContent=track.items[0].date.replace('2026/','').replace('/','.');
-  row.appendChild(sl);
+  if(!track.phase){
+    const firstP=ps[0];
+    const sl=document.createElement('div');
+    sl.className='startlab'+(firstP<6?' l':'');
+    sl.style.left=firstP+'%';
+    sl.textContent=track.items[0].date.replace('2026/','').replace('/','.');
+    row.appendChild(sl);
+  }
 
   track.items.forEach((it,idx)=>{
     const p=ps[idx];
-    const overdue=parse(it.date)<=TODAY;
+    const overdue=(it.end?parse(it.end):parse(it.date))<=TODAY ? (parse(it.date)<=TODAY) : false;
+    const startOverdue=parse(it.date)<=TODAY;
     const dd=it.date.replace('2026/','').replace('/','.');
-    if(it.done){
+
+    if(it.end){
+      // phase segment
+      const pEnd=pe[idx];
+      const seg=document.createElement('div');
+      const segOverdue=parse(it.end)<=TODAY;
+      seg.className='phase '+track.color+(segOverdue?' overdue':'');
+      seg.style.left=p+'%';seg.style.width=(pEnd-p)+'%';
+      seg.dataset.t=ti;seg.dataset.i=idx;
+      row.appendChild(seg);
+      const lab=document.createElement('div');
+      lab.className='phaselab'+(idx%2?' below':'');
+      lab.style.left=((p+pEnd)/2)+'%';
+      lab.dataset.t=ti;lab.dataset.i=idx;
+      const ed=it.end.replace('2026/','').replace('/','.');
+      lab.innerHTML=`<span class="t">${it.short||it.task}</span><span class="d">${dd}–${ed}</span>`;
+      row.appendChild(lab);
+    }else if(it.done){
       const dia=document.createElement('div');
       dia.className='ms';dia.style.left=p+'%';
       dia.dataset.t=ti;dia.dataset.i=idx;
@@ -350,10 +392,19 @@ tracks.forEach((track,ti)=>{
       row.appendChild(lab);
     }else{
       const s=document.createElement('div');
-      s.className='step '+track.color+(overdue?' overdue':'');
+      s.className='step '+track.color+(startOverdue?' overdue':'');
       s.style.left=p+'%';
       s.dataset.t=ti;s.dataset.i=idx;
       row.appendChild(s);
+      if(track.phase){
+        // labeled point (e.g. deadline) inside a phase track
+        const lab=document.createElement('div');
+        lab.className='phaselab'+(idx%2?' below':'');
+        lab.style.left=p+'%';
+        lab.dataset.t=ti;lab.dataset.i=idx;
+        lab.innerHTML=`<span class="t">${it.short||it.task}</span><span class="d">~${dd}</span>`;
+        row.appendChild(lab);
+      }
     }
   });
 
@@ -378,20 +429,29 @@ function clearSel(){ if(selEl){selEl.classList.remove('sel');selEl=null;} }
 
 function showStep(ti,idx,markerEl){
   const track=tracks[ti], it=track.items[idx];
-  const overdue=parse(it.date)<=TODAY;
+  const isPhase=!!it.end;
+  const refEnd=it.end?parse(it.end):parse(it.date);
+  const overdue=isPhase?(parse(it.date)<=TODAY):(parse(it.date)<=TODAY);
   const dd=it.date.replace('2026/','').replace('/','.');
+  const ed=it.end?it.end.replace('2026/','').replace('/','.'):null;
   const wd=['일','월','화','수','목','금','토'][parse(it.date).getDay()];
 
-  const chips=[`<span class="chip trk">${track.name} · ${track.proj}</span>`,
-               `<span class="chip date">${dd} (${wd})</span>`];
+  const chips=[`<span class="chip trk">${track.name} · ${track.proj}</span>`];
+  if(isPhase) chips.push(`<span class="chip date">${dd} – ${ed}</span>`);
+  else chips.push(`<span class="chip date">${dd} (${wd})${it.deadline?' 마감':''}</span>`);
   if(it.done)chips.push(`<span class="chip ms">◆ 마일스톤</span>`);
-  if(overdue)chips.push(`<span class="chip ov">기한 도래·경과</span>`);
+  if(overdue && !it.done)chips.push(`<span class="chip ov">${isPhase?'진행 중·시작 도래':'기한 도래·경과'}</span>`);
 
-  // sequence strip within track
   const seq=track.items.map((s,j)=>{
     const sd=s.date.replace('2026/','').replace('/','.');
     return `<span class="sq${j===idx?' cur':''}" data-t="${ti}" data-i="${j}">${sd}</span>`;
   }).join('<span class="arw">→</span>');
+
+  const dateRow=isPhase
+    ? `<div class="m"><span class="mk">기간</span><span class="mv">2026.${dd} – ${ed}</span></div>
+       <div class="m"><span class="mk">소요</span><span class="mv">${Math.round((refEnd-parse(it.date))/864e5)}일</span></div>`
+    : `<div class="m"><span class="mk">${it.deadline?'마감일':'계획일'}</span><span class="mv">2026.${dd}</span></div>
+       <div class="m"><span class="mk">완료일</span><span class="mv">미기재</span></div>`;
 
   detail.className='detail on '+track.color;
   detail.innerHTML=
@@ -400,16 +460,15 @@ function showStep(ti,idx,markerEl){
        <div class="top">${chips.join('')}<button class="close" aria-label="닫기">×</button></div>
        <h3>${it.task}</h3>
        <div class="meta">
-         <div class="m"><span class="mk">계획일</span><span class="mv">2026.${dd}</span></div>
+         ${dateRow}
          <div class="m"><span class="mk">단계</span><span class="mv">${it.stage||'—'}</span></div>
          <div class="m"><span class="mk">진행 상태</span><span class="mv">미기재</span></div>
-         <div class="m"><span class="mk">완료일</span><span class="mv">미기재</span></div>
        </div>
        ${it.note?`<div class="note">${it.note}</div>`:''}
        <div class="hint">이 트랙의 순서 (클릭 이동):</div>
        <div class="seq">${seq}</div>
      </div>`;
-  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(detail.scrollIntoView)detail.scrollIntoView({behavior:'smooth',block:'nearest'});
   clearSel();
   if(markerEl){markerEl.classList.add('sel');selEl=markerEl;}
 }
@@ -428,7 +487,7 @@ function showTbd(ti){
        <h3>미확정 항목 · 필요시 진행</h3>
        <div class="note">${track.tbd.detail}</div>
      </div>`;
-  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(detail.scrollIntoView)detail.scrollIntoView({behavior:'smooth',block:'nearest'});
   clearSel();
 }
 
@@ -438,17 +497,19 @@ document.addEventListener('click',e=>{
   const sq=e.target.closest('.seq .sq');
   if(sq){
     const ti=+sq.dataset.t, idx=+sq.dataset.i;
-    const marker=plot.querySelector(`.step[data-t="${ti}"][data-i="${idx}"], .ms[data-t="${ti}"][data-i="${idx}"]`);
+    const marker=plot.querySelector(`.step[data-t="${ti}"][data-i="${idx}"], .ms[data-t="${ti}"][data-i="${idx}"], .phase[data-t="${ti}"][data-i="${idx}"]`);
     showStep(ti,idx,marker);return;
   }
-  const m=e.target.closest('.step,.ms,.mslabel,.tbdchip');
+  const m=e.target.closest('.step,.ms,.mslabel,.phase,.phaselab,.tbdchip');
   if(!m)return;
   if(m.dataset.tbd){showTbd(+m.dataset.t);return;}
   const ti=+m.dataset.t, idx=+m.dataset.i;
-  // if a label clicked, highlight its diamond marker
+  // if a label clicked, highlight its marker
   let marker=m;
   if(m.classList.contains('mslabel')){
     marker=plot.querySelector(`.ms[data-t="${ti}"][data-i="${idx}"]`);
+  }else if(m.classList.contains('phaselab')){
+    marker=plot.querySelector(`.phase[data-t="${ti}"][data-i="${idx}"], .step[data-t="${ti}"][data-i="${idx}"]`);
   }
   showStep(ti,idx,marker);
 });
