@@ -220,7 +220,7 @@
       <span class="i"><span class="dia"></span> 완료 마일스톤</span>
       <span class="i"><span class="dot r"></span><span class="dot g"></span> 단계 (클릭 시 상세)</span>
       <span class="i"><span class="ov"></span> 기한 도래·경과</span>
-      <span class="i"><span class="tl"></span> 오늘 7/24</span>
+      <span class="i"><span class="tl"></span> 오늘 7/28</span>
     </div>
   </div>
 
@@ -234,7 +234,7 @@
 const AXIS_START=new Date(2026,6,13);
 const AXIS_END=new Date(2026,11,3);
 const SPAN=AXIS_END-AXIS_START;
-const TODAY=new Date(2026,6,24);
+const TODAY=new Date(2026,6,28);
 const parse=d=>{const[y,m,day]=d.split('/').map(Number);return new Date(y,m-1,day);};
 const pct=d=>((parse(d)-AXIS_START)/SPAN)*100;
 const pctDate=dt=>((dt-AXIS_START)/SPAN)*100;
@@ -346,7 +346,7 @@ ov.insertAdjacentHTML('beforeend',`<div class="focus" style="left:${fL}%;width:$
 ov.insertAdjacentHTML('beforeend',`<div class="focus-tag" style="left:${(fL+fR)/2}%">10월 집중</div>`);
 // today
 const tp=pctDate(TODAY);
-ov.insertAdjacentHTML('beforeend',`<div class="today" style="left:${tp}%"><span class="pin">오늘 7/24</span></div>`);
+ov.insertAdjacentHTML('beforeend',`<div class="today" style="left:${tp}%"><span class="pin">오늘 7/28</span></div>`);
 
 /* ---- rows ---- */
 const gut=document.getElementById('gutter');
