@@ -234,7 +234,8 @@
 const AXIS_START=new Date(2026,6,13);
 const AXIS_END=new Date(2026,11,3);
 const SPAN=AXIS_END-AXIS_START;
-const TODAY=new Date(2026,7,6);
+const _now=new Date();
+const TODAY=new Date(_now.getFullYear(),_now.getMonth(),_now.getDate());
 const parse=d=>{const[y,m,day]=d.split('/').map(Number);return new Date(y,m-1,day);};
 const pct=d=>((parse(d)-AXIS_START)/SPAN)*100;
 const pctDate=dt=>((dt-AXIS_START)/SPAN)*100;
